@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Roomies"
+             x:Class="Roomies.LoginPage"
+             Title="LoginPage">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Entry x:Name="InputNume" Placeholder="Nume" />
+            <Entry x:Name="InputPrenume" Placeholder="Prenume" />
+            <Entry x:Name="InputParola" Placeholder="Parola" />
+            <Entry x:Name="InputVarsta" Placeholder="Vârstă" Keyboard="Numeric" />
+            <Picker x:Name="pickerGen"
+                    Title="Gen"
+                    ItemsSource="{x:Static local:Optiuni.Genuri}" />
+
+            <Entry x:Name="InputFacultate" Placeholder="Facultate" />
+            <Entry x:Name="InputTelefon" Placeholder="Număr Telefon" Keyboard="Telephone" />
+
+            <Label Text="Zona Preferată:" FontAttributes="Bold" />
+            <VerticalStackLayout x:Name="zonaContainer" />
+
+            <Entry x:Name="InputBuget" Placeholder="Buget Maxim" Keyboard="Numeric" />
+            <Entry x:Name="InputPerioada" Placeholder="Perioada de ședere" />
+
+            <Label Text="Stil de viață:" FontAttributes="Bold" />
+            <Picker x:Name="pickerStil"
+                    Title="Alege stilul"
+                    ItemsSource="{x:Static local:Optiuni.StiluriDeViata}" />
+
+            <Entry x:Name="InputProgram" Placeholder="Program zilnic" />
+
+            <Label Text="Preferințe de trai:" FontAttributes="Bold" />
+            <VerticalStackLayout x:Name="traiContainer" />
+
+            <Editor x:Name="editorDescriere"
+                    Placeholder="Descriere..."
+                    AutoSize="TextChanges"
+                    HeightRequest="75" />
+            <Entry x:Name="InputEmail" Placeholder="Adresa Email" />
+
+            <Button Text="Creează Profil"
+                    BackgroundColor="#2B0B98"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="10"
+                    Clicked="OnCreateProfileClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
+
