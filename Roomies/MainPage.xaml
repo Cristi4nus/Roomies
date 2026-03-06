@@ -1,40 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:dataForm="clr-namespace:Syncfusion.Maui.DataForm;assembly=Syncfusion.Maui.DataForm"
              x:Class="Roomies.MainPage">
 
-    <ScrollView>
-        <VerticalStackLayout
-            Padding="20,0"
-            Spacing="15">
-            <Image
-                Source="logo.png"
-                HeightRequest="250"
-                Aspect="AspectFit"
-                SemanticProperties.Description="dot net bot in a submarine number ten" />
+    <Grid RowDefinitions="Auto,*"
+          ColumnDefinitions="*,Auto"
+          Padding="20">
+        <ScrollView Grid.Row="1" Grid.ColumnSpan="2">
+            <VerticalStackLayout Spacing="15">
 
-            <Label
-                Text="Bine ai venit pe Roomies, aplicatia care o sa te ajute sa iti gasesti compania perfecta pentru chiria din Cluj."
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level1"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I" />
+                <Image Source="logo.png"
+                       HeightRequest="250"
+                       Aspect="AspectFit" />
 
-            <Label
-                Text="Inainte de toate, te rugam sa iti creezi un profil pentru a-ti incepe calatoria!"
-                Style="{StaticResource Headline}"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to my user guide" />
-            <Button Text="Creaza profil"
-                BackgroundColor="#2B0B98"
-                TextColor="White"
-                CornerRadius="10"
-                HeightRequest="50"
-                HorizontalOptions="Center"
-                WidthRequest="200"
-                Clicked="OnLoginButtonClicked"/>
+                <Label Text="Bine ai venit pe Roomies, aplicatia care o sa te ajute sa iti gasesti compania perfecta pentru chiria din Cluj."
+                       Style="{StaticResource Headline}" />
+            </VerticalStackLayout>
+        </ScrollView>
+        <ImageButton Grid.Row="0"
+                     Grid.Column="1"
+                     Source="utilizator.png"
+                     WidthRequest="30"
+                     HeightRequest="30"
+                     BackgroundColor="Transparent"
+                     Clicked="OnProfileClicked" />
 
-        </VerticalStackLayout>
-    </ScrollView>
+    </Grid>
 
 </ContentPage>

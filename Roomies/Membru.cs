@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SQLite;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -7,6 +8,7 @@ namespace Roomies
 {
     public class Membru
     {
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
         public string Nume { get; set; }
         public string Prenume { get; set; }

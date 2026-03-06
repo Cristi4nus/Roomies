@@ -2,16 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Roomies"
-             x:Class="Roomies.LoginPage"
-             Title="LoginPage">
+             x:Class="Roomies.ProfilePage"
+             Title="Profilul Meu">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
             <Entry x:Name="InputNume" Placeholder="Nume" />
             <Entry x:Name="InputPrenume" Placeholder="Prenume" />
-            <Entry x:Name="InputParola" Placeholder="Parola" />
             <Entry x:Name="InputVarsta" Placeholder="Vârstă" Keyboard="Numeric" />
+
             <Picker x:Name="pickerGen"
                     Title="Gen"
                     ItemsSource="{x:Static local:Optiuni.Genuri}" />
@@ -37,17 +37,17 @@
                     Placeholder="Descriere..."
                     AutoSize="TextChanges"
                     HeightRequest="75" />
+
             <Entry x:Name="InputEmail" Placeholder="Adresa Email" />
 
-            <Button Text="Creează Profil"
+            <Button Text="Salvează Modificările"
                     BackgroundColor="#2B0B98"
                     TextColor="White"
                     CornerRadius="10"
                     HeightRequest="10"
-                    Clicked="OnCreateProfileClicked" />
+                    Clicked="OnUpdateProfileClicked" />
 
         </VerticalStackLayout>
     </ScrollView>
 
 </ContentPage>
-

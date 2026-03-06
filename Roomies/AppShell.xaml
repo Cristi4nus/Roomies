@@ -9,5 +9,4 @@
     <ShellContent
         Title="Acasă"
         ContentTemplate="{DataTemplate local:MainPage}" />
-
 </Shell>

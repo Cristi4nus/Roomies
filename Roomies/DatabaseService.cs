@@ -31,6 +31,11 @@ namespace Roomies
         {
             return _db.Table<Membru>().ToListAsync();
         }
+        public async Task UpdateMembruAsync(Membru membru)
+        {
+            await _db.UpdateAsync(membru);
+        }
+
     }
 }
 

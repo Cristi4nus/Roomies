@@ -31,6 +31,20 @@ namespace Roomies
             }
 
             await DisplayAlert("Succes", "Autentificare reușită!", "OK");
+
+            Application.Current.MainPage = new NavigationPage(new MainPage(membru));
+        }
+        private async void OnSignOutClicked(object sender, EventArgs e)
+        {
+            bool confirm = await DisplayAlert("Confirmare",
+                "Sigur vrei să te deloghezi?", "Da", "Nu");
+
+            if (!confirm)
+                return;
+
+            // Navigăm la pagina de login
+            var page = ServiceHelper.GetService<LoginPage>();
+            await Navigation.PushAsync(page);
         }
     }
 }

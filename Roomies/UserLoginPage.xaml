@@ -14,5 +14,10 @@
                 BackgroundColor="#2B0B98"
                 TextColor="White"
                 CornerRadius="10" />
+        <Button Text="Sign Out"
+            BackgroundColor="Red"
+            TextColor="White"
+            CornerRadius="10"
+            Clicked="OnSignOutClicked" />
     </VerticalStackLayout>
 </ContentPage>

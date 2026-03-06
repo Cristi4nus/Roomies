@@ -1,17 +1,28 @@
-﻿namespace Roomies
+﻿using Roomies;
+
+namespace Roomies
 {
     public partial class MainPage : ContentPage
     {
-
+        private Membru _user;
         public MainPage()
         {
             InitializeComponent();
-
         }
-        private async void OnLoginButtonClicked(object sender, EventArgs e)
+        public MainPage(Membru user) : this()
         {
-            await Shell.Current.GoToAsync("Login");
+            _user = user;
         }
 
+        private async void OnProfileClicked(object sender, EventArgs e)
+        {
+            if (_user == null)
+            {
+                await DisplayAlert("Eroare", "Nu există utilizator încărcat.", "OK");
+                return;
+            }
+
+            await Navigation.PushAsync(new ProfilePage(_user));
+        }
     }
 }
