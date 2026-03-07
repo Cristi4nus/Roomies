@@ -3,15 +3,57 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Roomies"
              x:Class="Roomies.LoginPage"
-             Title="LoginPage">
+             Title="Creează Profil">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
+            <Label Text="Alege Avatar" FontAttributes="Bold" FontSize="18" />
+
+            <Image x:Name="SelectedAvatarImage"
+                   HeightRequest="120"
+                   WidthRequest="120"
+                   Aspect="AspectFill"
+                   HorizontalOptions="Center"
+                   Source="utilizator.png"/>
+
+            <ScrollView Orientation="Horizontal">
+                <HorizontalStackLayout Spacing="15" Padding="10">
+
+                    <Image Source="avatar1.png" HeightRequest="80">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"
+                                                  CommandParameter="avatar1.png"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image Source="avatar2.png" HeightRequest="80">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"
+                                                  CommandParameter="avatar2.png"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image Source="avatar3.png" HeightRequest="80">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"
+                                                  CommandParameter="avatar3.png"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Image Source="avatar4.png" HeightRequest="80">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"
+                                                  CommandParameter="avatar4.png"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                </HorizontalStackLayout>
+            </ScrollView>
 
             <Entry x:Name="InputNume" Placeholder="Nume" />
             <Entry x:Name="InputPrenume" Placeholder="Prenume" />
             <Entry x:Name="InputParola" Placeholder="Parola" />
             <Entry x:Name="InputVarsta" Placeholder="Vârstă" Keyboard="Numeric" />
+
             <Picker x:Name="pickerGen"
                     Title="Gen"
                     ItemsSource="{x:Static local:Optiuni.Genuri}" />
@@ -37,6 +79,7 @@
                     Placeholder="Descriere..."
                     AutoSize="TextChanges"
                     HeightRequest="75" />
+
             <Entry x:Name="InputEmail" Placeholder="Adresa Email" />
 
             <Button Text="Creează Profil"
@@ -50,4 +93,3 @@
     </ScrollView>
 
 </ContentPage>
-

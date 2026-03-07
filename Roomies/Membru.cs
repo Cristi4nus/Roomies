@@ -10,6 +10,7 @@ namespace Roomies
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+        public string Avatar { get; set; }
         public string Nume { get; set; }
         public string Prenume { get; set; }
 

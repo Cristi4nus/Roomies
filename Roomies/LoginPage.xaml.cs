@@ -7,22 +7,31 @@ namespace Roomies
     public partial class LoginPage : ContentPage
     {
         private readonly DatabaseService _db;
-        private List<CheckBox> zonaCheckboxes = new();
-        private List<CheckBox> traiCheckboxes = new();
+        private readonly List<CheckBox> zonaCheckboxes = new();
+        private readonly List<CheckBox> traiCheckboxes = new();
+        private string _selectedAvatar = "utilizator.png";
 
         public LoginPage()
         {
             InitializeComponent();
 
-            // Luăm serviciul din DI prin helper
             _db = ServiceHelper.GetService<DatabaseService>();
 
             GenerateZonaCheckboxes();
             GeneratePreferinteCheckboxes();
         }
 
+        private void OnAvatarTapped(object sender, TappedEventArgs e)
+        {
+            _selectedAvatar = e.Parameter.ToString();
+            SelectedAvatarImage.Source = _selectedAvatar;
+        }
+
         private void GenerateZonaCheckboxes()
         {
+            zonaContainer.Children.Clear();
+            zonaCheckboxes.Clear();
+
             foreach (var zona in Optiuni.ZonePreferate)
             {
                 var cb = new CheckBox();
@@ -41,6 +50,9 @@ namespace Roomies
 
         private void GeneratePreferinteCheckboxes()
         {
+            traiContainer.Children.Clear();
+            traiCheckboxes.Clear();
+
             foreach (var pref in Optiuni.PreferinteDeTrai)
             {
                 var cb = new CheckBox();
@@ -59,7 +71,6 @@ namespace Roomies
 
         private async void OnCreateProfileClicked(object sender, EventArgs e)
         {
-            // Minimal required fields
             if (string.IsNullOrWhiteSpace(InputNume.Text) ||
                 string.IsNullOrWhiteSpace(InputPrenume.Text) ||
                 string.IsNullOrWhiteSpace(InputParola.Text))
@@ -68,7 +79,6 @@ namespace Roomies
                 return;
             }
 
-            // Validate numeric inputs
             if (!int.TryParse(InputVarsta?.Text, out var varsta))
             {
                 await DisplayAlert("Eroare", "Introduceți o vârstă validă.", "OK");
@@ -81,43 +91,34 @@ namespace Roomies
                 return;
             }
 
-            try
+            PasswordHelper.CreatePasswordHash(InputParola.Text, out byte[] hash, out byte[] salt);
+
+            var membru = new Membru
             {
-                PasswordHelper.CreatePasswordHash(InputParola.Text, out byte[] hash, out byte[] salt);
+                Avatar = _selectedAvatar,
+                Nume = InputNume.Text,
+                Prenume = InputPrenume.Text,
+                Varsta = varsta,
+                Gen = pickerGen.SelectedItem?.ToString(),
+                Facultate = InputFacultate.Text,
+                NumarTelefon = InputTelefon.Text,
+                ZonaPreferata = GetSelectedZona(),
+                BugetMaxim = buget,
+                PerioadaDeSedere = InputPerioada.Text,
+                StilDeViata = pickerStil.SelectedItem?.ToString(),
+                PreferinteDeTrai = GetSelectedPreferinte(),
+                Descriere = editorDescriere.Text,
+                Email = InputEmail.Text,
+                ParolaHash = hash,
+                ParolaSalt = salt
+            };
 
-                var membru = new Membru
-                {
-                    Nume = InputNume.Text,
-                    Prenume = InputPrenume.Text,
-                    Varsta = varsta,
-                    Gen = pickerGen.SelectedItem?.ToString(),
-                    Facultate = InputFacultate.Text,
-                    NumarTelefon = InputTelefon.Text,
-                    ZonaPreferata = GetSelectedZona(),
-                    BugetMaxim = buget,
-                    PerioadaDeSedere = InputPerioada.Text,
-                    StilDeViata = pickerStil.SelectedItem?.ToString(),
-                    PreferinteDeTrai = GetSelectedPreferinte(),
-                    Descriere = editorDescriere.Text,
-                    Email = InputEmail.Text,
-                    ParolaHash = hash,
-                    ParolaSalt = salt
-                };
+            await _db.AddMembruAsync(membru);
 
-                await _db.AddMembruAsync(membru);
+            await DisplayAlert("Succes", "Profil creat!", "OK");
 
-                await DisplayAlert("Succes", "Profil creat!", "OK");
-
-                var page = ServiceHelper.GetService<UserLoginPage>();
-                await Navigation.PushAsync(page);
-            }
-            catch (Exception ex)
-            {
-                // Log or show friendly message instead of crashing
-                await DisplayAlert("Eroare internă", "A intervenit o eroare. Încercați din nou.", "OK");
-                // optional: Debug.WriteLine(ex);
-            }
-        }               
+            await Navigation.PushAsync(ServiceHelper.GetService<UserLoginPage>());
+        }
 
         private string GetSelectedZona()
         {

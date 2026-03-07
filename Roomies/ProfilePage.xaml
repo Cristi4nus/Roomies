@@ -7,6 +7,48 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
+            <Label Text="Avatar" FontAttributes="Bold" FontSize="18" />
+
+            <Image x:Name="SelectedAvatarImage"
+                   HeightRequest="120"
+                   WidthRequest="120"
+                   Aspect="AspectFill"
+                   HorizontalOptions="Center"/>
+
+            <ScrollView Orientation="Horizontal">
+                <HorizontalStackLayout Spacing="15" Padding="10">
+
+                    <Image Source="avatar1.png" HeightRequest="80">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"
+                                                  CommandParameter="avatar1.png"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image Source="avatar2.png" HeightRequest="80">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"
+                                                  CommandParameter="avatar2.png"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                    <Image Source="avatar3.png" HeightRequest="80">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"
+                                                  CommandParameter="avatar3.png"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+                    <Image Source="avatar4.png" HeightRequest="80">
+                        <Image.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAvatarTapped"
+                              CommandParameter="avatar4.png"/>
+                        </Image.GestureRecognizers>
+                    </Image>
+
+                </HorizontalStackLayout>
+            </ScrollView>
+
+            <!-- FORMULARUL TĂU EXISTENT -->
 
             <Entry x:Name="InputNume" Placeholder="Nume" />
             <Entry x:Name="InputPrenume" Placeholder="Prenume" />

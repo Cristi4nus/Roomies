@@ -17,12 +17,12 @@
             </VerticalStackLayout>
         </ScrollView>
         <ImageButton Grid.Row="0"
-                     Grid.Column="1"
-                     Source="utilizator.png"
-                     WidthRequest="30"
-                     HeightRequest="30"
-                     BackgroundColor="Transparent"
-                     Clicked="OnProfileClicked" />
+             Grid.Column="1"
+             Source="{Binding Avatar}"
+             WidthRequest="60"
+             HeightRequest="60"
+             BackgroundColor="Transparent"
+             Clicked="OnProfileClicked" />
 
     </Grid>
 

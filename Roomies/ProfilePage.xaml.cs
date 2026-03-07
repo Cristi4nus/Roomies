@@ -25,6 +25,8 @@ namespace Roomies
 
         private void LoadUserData()
         {
+            SelectedAvatarImage.Source = _user.Avatar ?? "utilizator.png";
+
             InputNume.Text = _user.Nume;
             InputPrenume.Text = _user.Prenume;
             InputVarsta.Text = _user.Varsta.ToString();
@@ -37,7 +39,6 @@ namespace Roomies
             editorDescriere.Text = _user.Descriere;
             InputEmail.Text = _user.Email;
 
-            // Zone preferate
             var zoneSelectate = _user.ZonaPreferata?.Split(", ");
 
             for (int i = 0; i < zonaCheckboxes.Count; i++)
@@ -52,8 +53,18 @@ namespace Roomies
                     traiCheckboxes[i].IsChecked = true;
         }
 
+        private void OnAvatarTapped(object sender, TappedEventArgs e)
+        {
+            string avatar = e.Parameter.ToString();
+            _user.Avatar = avatar;
+            SelectedAvatarImage.Source = avatar;
+        }
+
         private void GenerateZonaCheckboxes()
         {
+            zonaContainer.Children.Clear();
+            zonaCheckboxes.Clear();
+
             foreach (var zona in Optiuni.ZonePreferate)
             {
                 var cb = new CheckBox();
@@ -72,6 +83,9 @@ namespace Roomies
 
         private void GeneratePreferinteCheckboxes()
         {
+            traiContainer.Children.Clear();
+            traiCheckboxes.Clear();
+
             foreach (var pref in Optiuni.PreferinteDeTrai)
             {
                 var cb = new CheckBox();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using SQLite;
 
 namespace Roomies
@@ -13,6 +14,16 @@ namespace Roomies
         {
             _db = new SQLiteAsyncConnection(dbPath);
             _db.CreateTableAsync<Membru>().Wait();
+
+            // Încearcă să adauge coloana Avatar dacă nu există deja
+            try
+            {
+                _db.ExecuteAsync("ALTER TABLE Membru ADD COLUMN Avatar TEXT").Wait();
+            }
+            catch
+            {
+                // Dacă dă eroare, înseamnă că Avatar există deja → ignorăm
+            }
         }
 
         public Task<int> AddMembruAsync(Membru membru)
@@ -31,11 +42,10 @@ namespace Roomies
         {
             return _db.Table<Membru>().ToListAsync();
         }
+
         public async Task UpdateMembruAsync(Membru membru)
         {
             await _db.UpdateAsync(membru);
         }
-
     }
 }
-
