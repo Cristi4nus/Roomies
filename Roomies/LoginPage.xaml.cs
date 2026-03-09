@@ -75,19 +75,19 @@ namespace Roomies
                 string.IsNullOrWhiteSpace(InputPrenume.Text) ||
                 string.IsNullOrWhiteSpace(InputParola.Text))
             {
-                await DisplayAlert("Eroare", "Completează numele, prenumele și parola.", "OK");
+                await DisplayAlert("Eroare", "Completeaza numele, prenumele si parola.", "okay!");
                 return;
             }
 
             if (!int.TryParse(InputVarsta?.Text, out var varsta))
             {
-                await DisplayAlert("Eroare", "Introduceți o vârstă validă.", "OK");
+                await DisplayAlert("Eroare", "Introduceti o varsta valida.", "splendid!");
                 return;
             }
 
             if (!int.TryParse(InputBuget?.Text, out var buget))
             {
-                await DisplayAlert("Eroare", "Introduceți un buget valid.", "OK");
+                await DisplayAlert("Eroare", "Introduceti un buget valid.", "super!");
                 return;
             }
 
@@ -115,7 +115,7 @@ namespace Roomies
 
             await _db.AddMembruAsync(membru);
 
-            await DisplayAlert("Succes", "Profil creat!", "OK");
+            await DisplayAlert("Succes", "Profil creat,totu bine!", "mirific!");
 
             await Navigation.PushAsync(ServiceHelper.GetService<UserLoginPage>());
         }

@@ -14,8 +14,8 @@
                 BackgroundColor="#2B0B98"
                 TextColor="White"
                 CornerRadius="10" />
-        <Button Text="Sign Out"
-            BackgroundColor="Red"
+        <Button Text="Sign Out/creaza un profil nou"
+            BackgroundColor="#2B0B98"
             TextColor="White"
             CornerRadius="10"
             Clicked="OnSignOutClicked" />

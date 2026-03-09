@@ -19,7 +19,6 @@ namespace Roomies
 
             builder.Services.AddSingleton(new DatabaseService(dbPath));
 
-            // Pagini cu constructori custom
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<UserLoginPage>();
 

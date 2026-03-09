@@ -40,12 +40,9 @@ namespace Roomies
             InputEmail.Text = _user.Email;
 
             var zoneSelectate = _user.ZonaPreferata?.Split(", ");
-
             for (int i = 0; i < zonaCheckboxes.Count; i++)
                 if (zoneSelectate?.Contains(Optiuni.ZonePreferate[i]) == true)
                     zonaCheckboxes[i].IsChecked = true;
-
-            // Preferinte de trai
             var traiSelectat = _user.PreferinteDeTrai?.Split(", ");
 
             for (int i = 0; i < traiCheckboxes.Count; i++)
@@ -107,7 +104,7 @@ namespace Roomies
             if (!int.TryParse(InputVarsta.Text, out var varsta) ||
                 !int.TryParse(InputBuget.Text, out var buget))
             {
-                await DisplayAlert("Eroare", "Vârsta și bugetul trebuie să fie numere.", "OK");
+                await DisplayAlert("Eroare", "Varsta si bugetul trebuie sa fie numere.", "oke");
                 return;
             }
 

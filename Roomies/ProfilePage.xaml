@@ -48,31 +48,29 @@
                 </HorizontalStackLayout>
             </ScrollView>
 
-            <!-- FORMULARUL TĂU EXISTENT -->
-
             <Entry x:Name="InputNume" Placeholder="Nume" />
             <Entry x:Name="InputPrenume" Placeholder="Prenume" />
-            <Entry x:Name="InputVarsta" Placeholder="Vârstă" Keyboard="Numeric" />
+            <Entry x:Name="InputVarsta" Placeholder="Varsta" Keyboard="Numeric" />
 
             <Picker x:Name="pickerGen"
                     Title="Gen"
                     ItemsSource="{x:Static local:Optiuni.Genuri}" />
 
             <Entry x:Name="InputFacultate" Placeholder="Facultate" />
-            <Entry x:Name="InputTelefon" Placeholder="Număr Telefon" Keyboard="Telephone" />
+            <Entry x:Name="InputTelefon" Placeholder="Numar Telefon" Keyboard="Telephone" />
 
-            <Label Text="Zona Preferată:" FontAttributes="Bold" />
+            <Label Text="Zona Preferata:" FontAttributes="Bold" />
             <VerticalStackLayout x:Name="zonaContainer" />
 
-            <Entry x:Name="InputBuget" Placeholder="Buget Maxim" Keyboard="Numeric" />
-            <Entry x:Name="InputPerioada" Placeholder="Perioada de ședere" />
+            <Entry x:Name="InputBuget" Placeholder="Buget Maxim(lei)" Keyboard="Numeric" />
+            <Entry x:Name="InputPerioada" Placeholder="Perioada de sedere" />
 
-            <Label Text="Stil de viață:" FontAttributes="Bold" />
+            <Label Text="Stil de viața:" FontAttributes="Bold" />
             <Picker x:Name="pickerStil"
                     Title="Alege stilul"
                     ItemsSource="{x:Static local:Optiuni.StiluriDeViata}" />
 
-            <Label Text="Preferințe de trai:" FontAttributes="Bold" />
+            <Label Text="Preferinte de trai:" FontAttributes="Bold" />
             <VerticalStackLayout x:Name="traiContainer" />
 
             <Editor x:Name="editorDescriere"
@@ -82,7 +80,7 @@
 
             <Entry x:Name="InputEmail" Placeholder="Adresa Email" />
 
-            <Button Text="Salvează Modificările"
+            <Button Text="Salvează Modificarile"
                     BackgroundColor="#2B0B98"
                     TextColor="White"
                     CornerRadius="10"

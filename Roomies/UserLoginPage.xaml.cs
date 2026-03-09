@@ -8,7 +8,7 @@ namespace Roomies
 
         public UserLoginPage()
         {
-            InitializeComponent(); // OBLIGATORIU
+            InitializeComponent();
             _db = ServiceHelper.GetService<DatabaseService>();
         }
 
@@ -18,7 +18,7 @@ namespace Roomies
 
             if (membru == null)
             {
-                await DisplayAlert("Eroare", "Utilizatorul nu există.", "OK");
+                await DisplayAlert("Eroare", "Utilizatorul nu exista.", "OK");
                 return;
             }
 
@@ -26,23 +26,21 @@ namespace Roomies
 
             if (!ok)
             {
-                await DisplayAlert("Eroare", "Parolă incorectă.", "OK");
+                await DisplayAlert("Eroare", "Parola este incorecta.", "OK");
                 return;
             }
 
-            await DisplayAlert("Succes", "Autentificare reușită!", "OK");
+            await DisplayAlert("Succes", "Autentificare reusita!", "OK");
 
             Application.Current.MainPage = new NavigationPage(new MainPage(membru));
         }
         private async void OnSignOutClicked(object sender, EventArgs e)
         {
             bool confirm = await DisplayAlert("Confirmare",
-                "Sigur vrei să te deloghezi?", "Da", "Nu");
+                "Sigur vrei sa iesi de pe cont?", "Da", "Nu");
 
             if (!confirm)
                 return;
-
-            // Navigăm la pagina de login
             var page = ServiceHelper.GetService<LoginPage>();
             await Navigation.PushAsync(page);
         }

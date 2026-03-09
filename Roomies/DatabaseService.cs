@@ -14,16 +14,6 @@ namespace Roomies
         {
             _db = new SQLiteAsyncConnection(dbPath);
             _db.CreateTableAsync<Membru>().Wait();
-
-            // Încearcă să adauge coloana Avatar dacă nu există deja
-            try
-            {
-                _db.ExecuteAsync("ALTER TABLE Membru ADD COLUMN Avatar TEXT").Wait();
-            }
-            catch
-            {
-                // Dacă dă eroare, înseamnă că Avatar există deja → ignorăm
-            }
         }
 
         public Task<int> AddMembruAsync(Membru membru)
