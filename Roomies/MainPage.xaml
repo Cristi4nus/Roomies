@@ -1,26 +1,40 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Roomies.MainPage">
+
     <Grid RowDefinitions="Auto,*"
           ColumnDefinitions="*,Auto"
           Padding="10">
-        <ImageButton Grid.Row="0"
-                     Grid.Column="1"
-                     Source="{Binding Avatar}"
-                     WidthRequest="60"
-                     HeightRequest="60"
-                     BackgroundColor="Transparent"
-                     Clicked="OnProfileClicked" />
-        <ScrollView Grid.Row="1" Grid.ColumnSpan="2">
-            <VerticalStackLayout Spacing="20">
+        <Grid Grid.Row="0"
+              Grid.Column="1"
+              ColumnDefinitions="Auto,Auto"
+              ColumnSpacing="10">
+            <ImageButton Grid.Column="1"
+                         Source="{Binding Avatar}"
+                         WidthRequest="50"
+                         HeightRequest="50"
+                         BackgroundColor="Transparent"
+                         Clicked="OnProfileClicked" />
+            <ImageButton Grid.Column="0"
+                         Source="bell.png"
+                         WidthRequest="50"
+                         HeightRequest="50"
+                         BackgroundColor="Transparent"
+                         Clicked="OnNotificationsClicked" />
+        </Grid>
+        <ScrollView Grid.Row="1"
+                    Grid.ColumnSpan="2">
+            <VerticalStackLayout Spacing="10">
                 <Image Source="logo.png"
                        HeightRequest="150"
                        Aspect="AspectFit" />
-                <Label Text="Bine ai venit pe Roomies, aplicatia care o sa te ajute sa iti gasesti compania perfecta pentru chiria din Cluj."
+
+                <Label Text="Bine ai venit pe Roomies, aplicatia care o sa te ajute sa iti gasesti 
+                       compania perfecta pentru chiria din Cluj."
                        Style="{StaticResource Headline}" />
                 <VerticalStackLayout x:Name="UsersContainer"
-                                     Spacing="15"
-                                     Padding="10" />
+                                     Spacing="10"
+                                     Padding="5" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

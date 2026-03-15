@@ -8,19 +8,55 @@ namespace Roomies
     {
         private readonly DatabaseService _db;
         private Membru _user;
+        private bool _isOwnProfile;
+
         private List<CheckBox> zonaCheckboxes = new();
         private List<CheckBox> traiCheckboxes = new();
 
-        public ProfilePage(Membru user)
+        public ProfilePage(Membru user, bool isOwnProfile = false)
         {
             InitializeComponent();
 
             _db = ServiceHelper.GetService<DatabaseService>();
             _user = user;
+            _isOwnProfile = isOwnProfile;
 
             GenerateZonaCheckboxes();
             GeneratePreferinteCheckboxes();
             LoadUserData();
+            ApplyEditMode();
+        }
+
+        private void ApplyEditMode()
+        {
+            if (_isOwnProfile)
+                return;
+
+            // Ascunde butonul de salvare
+            SaveButton.IsVisible = false;
+
+            // Blochează câmpurile
+            InputNume.IsReadOnly = true;
+            InputPrenume.IsReadOnly = true;
+            InputVarsta.IsReadOnly = true;
+            pickerGen.IsEnabled = false;
+            InputFacultate.IsReadOnly = true;
+            InputTelefon.IsReadOnly = true;
+            InputBuget.IsReadOnly = true;
+            InputPerioada.IsReadOnly = true;
+            pickerStil.IsEnabled = false;
+            editorDescriere.IsReadOnly = true;
+            InputEmail.IsVisible = false;
+
+            // Blochează checkbox-urile
+            foreach (var cb in zonaCheckboxes)
+                cb.IsEnabled = false;
+
+            foreach (var cb in traiCheckboxes)
+                cb.IsEnabled = false;
+
+            // Blochează avatarul
+            SelectedAvatarImage.IsEnabled = false;
         }
 
         private void LoadUserData()
@@ -43,8 +79,8 @@ namespace Roomies
             for (int i = 0; i < zonaCheckboxes.Count; i++)
                 if (zoneSelectate?.Contains(Optiuni.ZonePreferate[i]) == true)
                     zonaCheckboxes[i].IsChecked = true;
-            var traiSelectat = _user.PreferinteDeTrai?.Split(", ");
 
+            var traiSelectat = _user.PreferinteDeTrai?.Split(", ");
             for (int i = 0; i < traiCheckboxes.Count; i++)
                 if (traiSelectat?.Contains(Optiuni.PreferinteDeTrai[i]) == true)
                     traiCheckboxes[i].IsChecked = true;
@@ -52,6 +88,9 @@ namespace Roomies
 
         private void OnAvatarTapped(object sender, TappedEventArgs e)
         {
+            if (!_isOwnProfile)
+                return;
+
             string avatar = e.Parameter.ToString();
             _user.Avatar = avatar;
             SelectedAvatarImage.Source = avatar;
@@ -101,10 +140,13 @@ namespace Roomies
 
         private async void OnUpdateProfileClicked(object sender, EventArgs e)
         {
+            if (!_isOwnProfile)
+                return;
+
             if (!int.TryParse(InputVarsta.Text, out var varsta) ||
                 !int.TryParse(InputBuget.Text, out var buget))
             {
-                await DisplayAlert("Eroare", "Varsta si bugetul trebuie sa fie numere.", "oke");
+                await DisplayAlertAsync("Eroare", "Varsta si bugetul trebuie sa fie numere.", "OK");
                 return;
             }
 
@@ -124,7 +166,7 @@ namespace Roomies
 
             await _db.UpdateMembruAsync(_user);
 
-            await DisplayAlert("Succes", "Profil actualizat!", "OK");
+            await DisplayAlertAsync("Succes", "Profil actualizat!", "OK");
             await Navigation.PopAsync();
         }
 

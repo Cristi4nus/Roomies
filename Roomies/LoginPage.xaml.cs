@@ -73,21 +73,28 @@ namespace Roomies
         {
             if (string.IsNullOrWhiteSpace(InputNume.Text) ||
                 string.IsNullOrWhiteSpace(InputPrenume.Text) ||
-                string.IsNullOrWhiteSpace(InputParola.Text))
+                string.IsNullOrWhiteSpace(InputParola.Text)||
+                string.IsNullOrWhiteSpace(InputEmail.Text))
             {
-                await DisplayAlert("Eroare", "Completeaza numele, prenumele si parola.", "okay!");
+                await DisplayAlertAsync("Eroare", "Completeaza numele, prenumele,emailul si parola.", "okay!");
+                return;
+            }
+            var existing = await _db.GetMembruByEmailAsync(InputEmail.Text);
+            if (existing != null)
+            {
+                await DisplayAlertAsync("Eroare", "Acest email este deja folosit. Alege altul.", "ok!");
                 return;
             }
 
             if (!int.TryParse(InputVarsta?.Text, out var varsta))
             {
-                await DisplayAlert("Eroare", "Introduceti o varsta valida.", "splendid!");
+                await DisplayAlertAsync("Eroare", "Introduceti o varsta valida.", "splendid!");
                 return;
             }
 
             if (!int.TryParse(InputBuget?.Text, out var buget))
             {
-                await DisplayAlert("Eroare", "Introduceti un buget valid.", "super!");
+                await DisplayAlertAsync("Eroare", "Introduceti un buget valid.", "super!");
                 return;
             }
 
@@ -115,7 +122,7 @@ namespace Roomies
 
             await _db.AddMembruAsync(membru);
 
-            await DisplayAlert("Succes", "Profil creat,totu bine!", "mirific!");
+            await DisplayAlertAsync("Succes", "Profil creat,totu bine!", "mirific!");
 
             await Navigation.PushAsync(ServiceHelper.GetService<UserLoginPage>());
         }

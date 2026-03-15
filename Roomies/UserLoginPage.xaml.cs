@@ -14,33 +14,52 @@ namespace Roomies
 
         private async void OnLoginClicked(object sender, EventArgs e)
         {
-            var membru = await _db.GetMembruByNumePrenumeAsync(InputNume.Text, InputPrenume.Text);
+            var email = InputEmail.Text;
+            var parola = InputParola.Text;
+
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(parola))
+            {
+                await DisplayAlertAsync("Eroare", "Completează toate câmpurile.", "OK");
+                return;
+            }
+
+            var membru = await _db.GetMembruByEmailAsync(email);
 
             if (membru == null)
             {
-                await DisplayAlert("Eroare", "Utilizatorul nu exista.", "OK");
+                await DisplayAlertAsync("Eroare", "Utilizatorul nu există.", "OK");
                 return;
             }
 
-            bool ok = PasswordHelper.VerifyPassword(InputParola.Text, membru.ParolaHash, membru.ParolaSalt);
+            bool ok = PasswordHelper.VerifyPassword(parola, membru.ParolaHash, membru.ParolaSalt);
 
             if (!ok)
             {
-                await DisplayAlert("Eroare", "Parola este incorecta.", "OK");
+                await DisplayAlertAsync("Eroare", "Parola este incorectă.", "OK");
                 return;
             }
 
-            await DisplayAlert("Succes", "Autentificare reusita!", "OK");
+            await DisplayAlertAsync("Succes", "Autentificare reușită!", "OK");
 
-            Application.Current.MainPage = new NavigationPage(new MainPage(membru));
+            var app = Application.Current;
+            if (app?.Windows != null && app.Windows.Count > 0)
+            {
+                app.Windows[0].Page = new NavigationPage(new MainPage(membru));
+            }
+            else if (Navigation != null)
+            {
+                await Navigation.PushAsync(new MainPage(membru));
+            }
         }
+
         private async void OnSignOutClicked(object sender, EventArgs e)
         {
-            bool confirm = await DisplayAlert("Confirmare",
-                "Sigur vrei sa iesi de pe cont?", "Da", "Nu");
+            bool confirm = await DisplayAlertAsync("Confirmare",
+                "Sigur vrei să ieși de pe cont?", "Da", "Nu");
 
             if (!confirm)
                 return;
+
             var page = ServiceHelper.GetService<LoginPage>();
             await Navigation.PushAsync(page);
         }

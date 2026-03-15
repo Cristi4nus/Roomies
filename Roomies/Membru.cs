@@ -29,7 +29,8 @@ namespace Roomies
         public string StilDeViata { get; set; }
         public string PreferinteDeTrai { get; set; }
         public string Descriere { get; set; }
-
+        
+        [Unique]
         [Display(Prompt = "example@mail.com", Name = "Email")]
         public string Email { get; set; }
     }

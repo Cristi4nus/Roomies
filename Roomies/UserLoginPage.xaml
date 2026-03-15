@@ -5,8 +5,8 @@
              Title="Autentificare">
 
     <VerticalStackLayout Padding="20" Spacing="15">
-        <Entry x:Name="InputNume" Placeholder="Nume" />
-        <Entry x:Name="InputPrenume" Placeholder="Prenume" />
+
+        <Entry x:Name="InputEmail" Placeholder="Email" Keyboard="Email" />
         <Entry x:Name="InputParola" Placeholder="Parolă" IsPassword="True" />
 
         <Button Text="Login"
@@ -14,10 +14,11 @@
                 BackgroundColor="#2B0B98"
                 TextColor="White"
                 CornerRadius="10" />
-        <Button Text="Sign Out/creaza un profil nou"
-            BackgroundColor="#2B0B98"
-            TextColor="White"
-            CornerRadius="10"
-            Clicked="OnSignOutClicked" />
+        <Button Text="Sign Out/Create a new profile"
+                BackgroundColor="#2B0B98"
+                TextColor="White"
+                CornerRadius="10"
+                Clicked="OnSignOutClicked" />
+
     </VerticalStackLayout>
 </ContentPage>

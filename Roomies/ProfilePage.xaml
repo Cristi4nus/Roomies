@@ -3,10 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Roomies"
              x:Class="Roomies.ProfilePage"
-             Title="Profilul Meu">
+             Title="Profil">
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
+
             <Label Text="Avatar" FontAttributes="Bold" FontSize="18" />
 
             <Image x:Name="SelectedAvatarImage"
@@ -38,10 +39,11 @@
                                                   CommandParameter="avatar3.png"/>
                         </Image.GestureRecognizers>
                     </Image>
+
                     <Image Source="avatar4.png" HeightRequest="80">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnAvatarTapped"
-                              CommandParameter="avatar4.png"/>
+                                                  CommandParameter="avatar4.png"/>
                         </Image.GestureRecognizers>
                     </Image>
 
@@ -80,11 +82,12 @@
 
             <Entry x:Name="InputEmail" Placeholder="Adresa Email" />
 
-            <Button Text="Salvează Modificarile"
+            <Button x:Name="SaveButton"
+                    Text="Salvează Modificarile"
                     BackgroundColor="#2B0B98"
                     TextColor="White"
                     CornerRadius="10"
-                    HeightRequest="10"
+                    HeightRequest="50"
                     Clicked="OnUpdateProfileClicked" />
 
         </VerticalStackLayout>
