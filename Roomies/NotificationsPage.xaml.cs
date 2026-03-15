@@ -50,7 +50,7 @@ namespace Roomies
 
                 var nameLabel = new Label
                 {
-                    Text = $"{sender.Nume} {sender.Prenume} ți-a trimis o cerere:",
+                    Text = $"{sender.Nume} {sender.Prenume} ti-a trimis o cerere:",
                     FontAttributes = FontAttributes.Bold,
                     FontSize = 18,
                     TextColor = Colors.Black
@@ -65,7 +65,7 @@ namespace Roomies
 
                 var acceptButton = new Button
                 {
-                    Text = "Acceptă",
+                    Text = "Accepta",
                     BackgroundColor = Colors.Green,
                     TextColor = Colors.White,
                     CornerRadius = 8,

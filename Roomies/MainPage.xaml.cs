@@ -136,13 +136,13 @@ namespace Roomies
 
                 if (await db.HasPendingRequestAsync(_user.Id, user.Id))
                 {
-                    await DisplayAlertAsync("Atenție", "Ai deja o cerere trimisă acestui utilizator!", "OK");
+                    await DisplayAlertAsync("Atentie", "Ai deja o cerere trimisa catre acest utilizator!", "OK");
                     return;
                 }
 
                 await db.SendFriendRequestWithNotificationAsync(_user.Id, user.Id, mesaj);
 
-                await DisplayAlertAsync("Succes", "Cererea a fost trimisă!", "OK");
+                await DisplayAlertAsync("Succes", "Cererea a fost trimisa!", "OK");
             };
             var border = new Border
             {

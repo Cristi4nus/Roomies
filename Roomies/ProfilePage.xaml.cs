@@ -31,11 +31,7 @@ namespace Roomies
         {
             if (_isOwnProfile)
                 return;
-
-            // Ascunde butonul de salvare
             SaveButton.IsVisible = false;
-
-            // Blochează câmpurile
             InputNume.IsReadOnly = true;
             InputPrenume.IsReadOnly = true;
             InputVarsta.IsReadOnly = true;
@@ -47,15 +43,12 @@ namespace Roomies
             pickerStil.IsEnabled = false;
             editorDescriere.IsReadOnly = true;
             InputEmail.IsVisible = false;
-
-            // Blochează checkbox-urile
             foreach (var cb in zonaCheckboxes)
                 cb.IsEnabled = false;
 
             foreach (var cb in traiCheckboxes)
                 cb.IsEnabled = false;
 
-            // Blochează avatarul
             SelectedAvatarImage.IsEnabled = false;
         }
 

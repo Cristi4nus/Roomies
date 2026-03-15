@@ -64,7 +64,7 @@ namespace Roomies
         public async Task SendFriendRequestWithNotificationAsync(int senderId, int receiverId, string mesaj)
         {
             if (await HasPendingRequestAsync(senderId, receiverId))
-                throw new Exception("Există deja o cerere în așteptare!");
+                throw new Exception("Exista deja o cerere in asteptare!");
 
             var cerere = new CererePrietenie
             {
@@ -83,7 +83,7 @@ namespace Roomies
             var notif = new Notificare
             {
                 UserId = receiverId,
-                Text = $"{fromUser.Nume} {fromUser.Prenume} ți-a trimis o cerere de prietenie: \"{mesaj}\"",
+                Text = $"{fromUser.Nume} {fromUser.Prenume} ti-a trimis o cerere de prietenie: \"{mesaj}\"",
                 Data = DateTime.Now
             };
 
@@ -113,8 +113,8 @@ namespace Roomies
             {
                 UserId = cerere.SenderId,
                 Text = newStatus == "Accepted"
-                    ? "Cererea ta de prietenie a fost acceptată!"
-                    : "Cererea ta de prietenie a fost respinsă.",
+                    ? "Cererea ta de prietenie a fost acceptata!"
+                    : "Cererea ta de prietenie a fost respinsa.",
                 Data = DateTime.Now
             };
 

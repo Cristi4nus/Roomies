@@ -122,7 +122,7 @@ namespace Roomies
 
             await _db.AddMembruAsync(membru);
 
-            await DisplayAlertAsync("Succes", "Profil creat,totu bine!", "mirific!");
+            await DisplayAlertAsync("Succes", "Profil creat,totu bine!", "Okay!");
 
             await Navigation.PushAsync(ServiceHelper.GetService<UserLoginPage>());
         }
