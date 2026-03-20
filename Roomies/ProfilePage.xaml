@@ -89,6 +89,13 @@
                     CornerRadius="10"
                     HeightRequest="50"
                     Clicked="OnUpdateProfileClicked" />
+            <Button x:Name="LogOut"
+                    Text="Deconectare"
+                    BackgroundColor="#2B0B98"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Clicked="OnLogoutClicked" />
 
         </VerticalStackLayout>
     </ScrollView>

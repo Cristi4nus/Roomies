@@ -1,0 +1,48 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Roomies"
+             x:Class="Roomies.PaginaFiltre">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Filtrează utilizatorii"
+                   FontSize="26"
+                   FontAttributes="Bold" />
+
+            <Picker x:Name="GenPicker"
+                    Title="Gen"
+                    ItemsSource="{x:Static local:Optiuni.Genuri}" />
+
+            <Picker x:Name="ZonaPicker"
+                    Title="Zona preferată"
+                    ItemsSource="{x:Static local:Optiuni.ZonePreferate}" />
+
+            <Picker x:Name="BugetPicker" Title="Buget maxim">
+                <Picker.Items>
+                    <x:String>0 - 250</x:String>
+                    <x:String>250 - 500</x:String>
+                    <x:String>500 - 750</x:String>
+                    <x:String>750 - 1000</x:String>
+                    <x:String>1000+</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <Picker x:Name="StilPicker"
+                    Title="Stil de viață"
+                    ItemsSource="{x:Static local:Optiuni.StiluriDeViata}" />
+
+            <Picker x:Name="PreferintePicker"
+                    Title="Preferințe de trai"
+                    ItemsSource="{x:Static local:Optiuni.PreferinteDeTrai}" />
+
+            <Button Text="Aplică filtre"
+                    BackgroundColor="#4DA3FF"
+                    TextColor="White"
+                    CornerRadius="10"
+                    Clicked="OnApplyClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

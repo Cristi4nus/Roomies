@@ -62,6 +62,13 @@ namespace Roomies
                     FontSize = 16,
                     TextColor = Colors.DarkGray
                 };
+                var dateLabel = new Label
+                {
+                    Text = $"Trimisă la: {req.Data:dd MMM yyyy, HH:mm}",
+                    FontSize = 14,
+                    TextColor = Colors.Gray
+                };
+
 
                 var acceptButton = new Button
                 {
@@ -84,9 +91,12 @@ namespace Roomies
                 acceptButton.Clicked += async (s, e) =>
                 {
                     await db.UpdateFriendRequestStatusAsync(req.ID, "Accepted");
+                    await db.AddFriendshipAsync(req.SenderId, req.ReceiverId);
+
                     await DisplayAlertAsync("Succes", "Ai acceptat cererea!", "OK");
                     OnAppearing();
                 };
+
 
                 rejectButton.Clicked += async (s, e) =>
                 {
@@ -117,6 +127,7 @@ namespace Roomies
                         {
                             nameLabel,
                             messageLabel,
+                            dateLabel,
                             buttonRow
                         }
                     }

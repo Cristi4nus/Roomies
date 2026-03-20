@@ -26,6 +26,7 @@ namespace Roomies
             LoadUserData();
             ApplyEditMode();
         }
+        //daca nu incalca peste picker faci super global read only
 
         private void ApplyEditMode()
         {
@@ -50,6 +51,7 @@ namespace Roomies
                 cb.IsEnabled = false;
 
             SelectedAvatarImage.IsEnabled = false;
+            LogOut.IsVisible = _isOwnProfile;
         }
 
         private void LoadUserData()
@@ -88,7 +90,13 @@ namespace Roomies
             _user.Avatar = avatar;
             SelectedAvatarImage.Source = avatar;
         }
-
+        private async void OnLogoutClicked(object sender, EventArgs e)
+        {
+            bool confirm = await DisplayAlertAsync("Confirmare", "Sigur vrei să te deconectezi?", "Da", "Nu");
+            if(!confirm)
+                return;
+            Application.Current.MainPage = new UserLoginPage();
+        }
         private void GenerateZonaCheckboxes()
         {
             zonaContainer.Children.Clear();

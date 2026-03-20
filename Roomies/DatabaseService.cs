@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SQLite;
+using System.Linq;
 
 namespace Roomies
 {
@@ -15,6 +16,7 @@ namespace Roomies
             _db.CreateTableAsync<Membru>().Wait();
             _db.CreateTableAsync<Notificare>().Wait();
             _db.CreateTableAsync<CererePrietenie>().Wait();
+            _db.CreateTableAsync<Prietenie>().Wait();
         }
         public Task<int> AddMembruAsync(Membru membru)
         {
@@ -61,6 +63,46 @@ namespace Roomies
 
             return cerere != null;
         }
+        public async Task RemoveFriendshipAsync(int user1, int user2)
+        {
+            var friendship = await _db.Table<Prietenie>()
+                .Where(p =>
+                    (p.User1Id == user1 && p.User2Id == user2) ||
+                    (p.User1Id == user2 && p.User2Id == user1))
+                .FirstOrDefaultAsync();
+
+            if (friendship != null)
+                await _db.DeleteAsync(friendship);
+        }
+
+        public async Task AddFriendshipAsync(int user1, int user2)
+        {
+            var pr = new Prietenie
+            {
+                User1Id = user1,
+                User2Id = user2
+            };
+
+            await _db.InsertAsync(pr);
+        }
+        public async Task<List<Membru>> GetFriendsAsync(int userId)
+        {
+            var friendships = await _db.Table<Prietenie>()
+                .Where(p => p.User1Id == userId || p.User2Id == userId)
+                .ToListAsync();
+
+            var friendIds = friendships.Select(p =>
+                p.User1Id == userId ? p.User2Id : p.User1Id).ToList();
+
+            var friends = new List<Membru>();
+
+            foreach (var id in friendIds)
+                friends.Add(await GetMembruByIdAsync(id));
+
+            return friends;
+        }
+
+
         public async Task SendFriendRequestWithNotificationAsync(int senderId, int receiverId, string mesaj)
         {
             if (await HasPendingRequestAsync(senderId, receiverId))
@@ -89,6 +131,27 @@ namespace Roomies
 
             await _db.InsertAsync(notif);
         }
+        public async Task<bool> AreFriendsAsync(int user1, int user2)
+        {
+            var friendship = await _db.Table<Prietenie>()
+                .Where(p =>
+                    (p.User1Id == user1 && p.User2Id == user2) ||
+                    (p.User1Id == user2 && p.User2Id == user1))
+                .FirstOrDefaultAsync();
+
+            return friendship != null;
+        }
+        public async Task<bool> HasReversePendingRequestAsync(int user1, int user2)
+        {
+            var req = await _db.Table<CererePrietenie>()
+                .Where(r => r.SenderId == user2 &&
+                            r.ReceiverId == user1 &&
+                            r.Status == "Pending")
+                .FirstOrDefaultAsync();
+
+            return req != null;
+        }
+
 
         public Task<List<CererePrietenie>> GetPendingRequestsForUserAsync(int userId)
         {

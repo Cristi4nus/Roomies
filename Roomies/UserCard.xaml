@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Roomies.UserCard">
+
+    <Border x:Name="RootBorder"
+            Stroke="#CCCCCC"
+            StrokeThickness="1"
+            Background="White"
+            StrokeShape="RoundRectangle 12"
+            Padding="10"
+            Margin="0,0,0,10">
+
+        <Grid ColumnSpacing="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <VerticalStackLayout x:Name="LeftStack"
+                                 Spacing="35"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Start">
+
+                <Image x:Name="AvatarImage"
+                       HeightRequest="60"
+                       WidthRequest="60"
+                       Aspect="AspectFill"
+                       Margin="0,10,0,0"/>
+
+                <Button x:Name="ActionButton"
+                        BackgroundColor="#4DA3FF"
+                        TextColor="White"
+                        CornerRadius="8"
+                        Padding="5,5"
+                        Margin="10,0,10,5"/>
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Column="1"
+                                 Spacing="5"
+                                 VerticalOptions="Start"
+                                 HorizontalOptions="Start">
+
+                <Label x:Name="NameLabel"
+                       FontAttributes="Bold"
+                       FontSize="24"
+                       TextColor="Black"/>
+
+                <Label x:Name="DetailsLabel"
+                       FontSize="14"
+                       TextColor="Black"/>
+            </VerticalStackLayout>
+
+        </Grid>
+    </Border>
+
+</ContentView>
