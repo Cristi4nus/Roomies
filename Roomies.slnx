@@ -1,3 +1,6 @@
 <Solution>
-  <Project Path="Roomies/Roomies.csproj" />
+  <Project Path="Roomies/Roomies.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="RoomiesApi/RoomiesApi.csproj" Id="581bfb7e-7cb4-46c1-9ae6-f92ae8f1416e" />
 </Solution>
