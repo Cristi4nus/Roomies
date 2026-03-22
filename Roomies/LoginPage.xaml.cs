@@ -120,7 +120,7 @@ namespace Roomies
                 ParolaSalt = salt
             };
 
-            await _db.AddMembruAsync(membru);
+            await _db.AdaugaMembruAsync(membru);
 
             await DisplayAlertAsync("Succes", "Profil creat,totu bine!", "Okay!");
 

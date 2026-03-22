@@ -34,7 +34,7 @@ namespace Roomies
 
                 card.ActionClicked += async (s, e) =>
                 {
-                    await DisplayAlert("Mesaj", "Funcția de chat va fi adăugată.", "OK");
+                    await DisplayAlertAsync("Mesaj", "Funcția de chat va fi adăugată.", "OK");
                 };
 
                 FriendsContainer.Children.Add(card);

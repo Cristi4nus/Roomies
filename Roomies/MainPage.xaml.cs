@@ -80,7 +80,7 @@ namespace Roomies
         }
         private async void OnFilterClicked(object sender, EventArgs e)
         {
-            var filterPage = new PaginaFiltre();
+            var filterPage = new PaginaFiltre(_user);
             await Navigation.PushAsync(filterPage);
 
             filterPage.Disappearing += (s, args) =>
@@ -89,6 +89,7 @@ namespace Roomies
                 RefreshUsers();
             };
         }
+
 
         private async void OnNotificationsClicked(object sender, EventArgs e)
         {

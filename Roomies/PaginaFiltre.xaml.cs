@@ -3,11 +3,15 @@ namespace Roomies
     public partial class PaginaFiltre : ContentPage
     {
         public FiltreMembri Filtre { get; private set; } = new();
+        private Membru _user;
 
-        public PaginaFiltre()
+
+        public PaginaFiltre(Membru user)
         {
             InitializeComponent();
+            _user = user;
         }
+
 
         private async void OnApplyClicked(object sender, EventArgs e)
         {
@@ -50,5 +54,24 @@ namespace Roomies
 
             await Navigation.PopAsync();
         }
+        private async void OnAddAlarmClicked(object sender, EventArgs e)
+        {
+            var db = ServiceHelper.GetService<DatabaseService>();
+
+            var alarm = new AlarmaFiltre
+            {
+                UserId = _user.Id,
+                Gen = GenPicker.SelectedItem?.ToString(),
+                Zona = ZonaPicker.SelectedItem?.ToString(),
+                Buget = BugetPicker.SelectedItem?.ToString(),
+                StilViata = StilPicker.SelectedItem?.ToString(),
+                Preferinte = PreferintePicker.SelectedItem?.ToString()
+            };
+
+            await db.AddAlarmAsync(alarm);
+
+            await DisplayAlertAsync("Succes", "Alarma a fost salvată!", "OK");
+        }
+
     }
 }
