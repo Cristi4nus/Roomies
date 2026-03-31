@@ -1,4 +1,4 @@
-﻿namespace Roomies
+﻿namespace RoomiesApi.Models
 {
     public class Membru
     {
@@ -17,5 +17,8 @@
         public string PreferinteDeTrai { get; set; }
         public string Descriere { get; set; }
         public string Email { get; set; }
+        public byte[]? ParolaHash { get; set; }
+        public byte[]? ParolaSalt { get; set; }
     }
+
 }

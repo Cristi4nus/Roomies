@@ -6,6 +6,14 @@ namespace Roomies
     {
         public static MauiApp CreateMauiApp()
         {
+#if ANDROID
+            Microsoft.Maui.Handlers.WebViewHandler.Mapper.AppendToMapping("EnableJS", (handler, view) =>
+            {
+                handler.PlatformView.Settings.JavaScriptEnabled = true;
+                handler.PlatformView.Settings.DomStorageEnabled = true;
+            });
+#endif
+
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
@@ -15,12 +23,15 @@ namespace Roomies
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "roomies.db3");
+            builder.Services.AddSingleton<DatabaseService>(s =>
+            {
+                string dbPath = Path.Combine(FileSystem.AppDataDirectory, "roomies.db3");
+                return new DatabaseService(dbPath);
+            });
 
-            builder.Services.AddSingleton(new DatabaseService(dbPath));
-
-            builder.Services.AddTransient<LoginPage>();
-            builder.Services.AddTransient<UserLoginPage>();
+            builder.Services.AddSingleton<UserLoginPage>();
+            builder.Services.AddSingleton<LoginPage>();
+            builder.Services.AddTransient<ServiciuChat>();
 
 #if DEBUG
             builder.Logging.AddDebug();

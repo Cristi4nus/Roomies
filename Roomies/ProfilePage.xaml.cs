@@ -26,7 +26,6 @@ namespace Roomies
             LoadUserData();
             ApplyEditMode();
         }
-        //daca nu incalca peste picker faci super global read only
 
         private void ApplyEditMode()
         {
@@ -70,12 +69,12 @@ namespace Roomies
             editorDescriere.Text = _user.Descriere;
             InputEmail.Text = _user.Email;
 
-            var zoneSelectate = _user.ZonaPreferata?.Split(", ");
+            var zoneSelectate = _user.ZonaPreferata?.Split(",");
             for (int i = 0; i < zonaCheckboxes.Count; i++)
                 if (zoneSelectate?.Contains(Optiuni.ZonePreferate[i]) == true)
                     zonaCheckboxes[i].IsChecked = true;
 
-            var traiSelectat = _user.PreferinteDeTrai?.Split(", ");
+            var traiSelectat = _user.PreferinteDeTrai?.Split(",");
             for (int i = 0; i < traiCheckboxes.Count; i++)
                 if (traiSelectat?.Contains(Optiuni.PreferinteDeTrai[i]) == true)
                     traiCheckboxes[i].IsChecked = true;
@@ -93,10 +92,14 @@ namespace Roomies
         private async void OnLogoutClicked(object sender, EventArgs e)
         {
             bool confirm = await DisplayAlertAsync("Confirmare", "Sigur vrei să te deconectezi?", "Da", "Nu");
-            if(!confirm)
+            if (!confirm)
                 return;
-            Application.Current.MainPage = new UserLoginPage();
+
+            App.JwtToken = null;
+
+            Application.Current.MainPage = new NavigationPage(new UserLoginPage());
         }
+
         private void GenerateZonaCheckboxes()
         {
             zonaContainer.Children.Clear();
@@ -179,7 +182,7 @@ namespace Roomies
                 if (zonaCheckboxes[i].IsChecked)
                     selected.Add(Optiuni.ZonePreferate[i]);
 
-            return string.Join(", ", selected);
+            return string.Join(",", selected);
         }
 
         private string GetSelectedPreferinte()
@@ -190,7 +193,7 @@ namespace Roomies
                 if (traiCheckboxes[i].IsChecked)
                     selected.Add(Optiuni.PreferinteDeTrai[i]);
 
-            return string.Join(", ", selected);
+            return string.Join(",", selected);
         }
     }
 }

@@ -1,8 +1,11 @@
-﻿namespace Roomies
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Roomies
 {
-    public class Membru
+    public class CerereRegister
     {
-        public int Id { get; set; }
         public string Avatar { get; set; }
         public string Nume { get; set; }
         public string Prenume { get; set; }
@@ -17,5 +20,6 @@
         public string PreferinteDeTrai { get; set; }
         public string Descriere { get; set; }
         public string Email { get; set; }
+        public string Parola { get; set; }
     }
 }

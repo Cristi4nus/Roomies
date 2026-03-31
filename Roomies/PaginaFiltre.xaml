@@ -41,6 +41,11 @@
                     TextColor="White"
                     CornerRadius="10"
                     Clicked="OnApplyClicked" />
+            <Button Text="Resetează filtre"
+                    BackgroundColor="#4DA3FF"
+                    TextColor="White"
+                    CornerRadius="10"
+                    Clicked="OnResetClicked" />
             <Label Text="Daca aceste filtre nu iti gasesc un utilizator compatibil, poti apasa pe adauga alarma, si noi te vom instinta cand un utilizator compatibil apare"
                    FontSize="16"
                    TextColor="Gray"

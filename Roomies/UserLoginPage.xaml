@@ -14,11 +14,12 @@
                 BackgroundColor="#2B0B98"
                 TextColor="White"
                 CornerRadius="10" />
-        <Button Text="Sign Out/Create a new profile"
+        <Button Text="Creează cont nou"
                 BackgroundColor="#2B0B98"
                 TextColor="White"
                 CornerRadius="10"
-                Clicked="OnSignOutClicked" />
+                Clicked="OnCreateAccountClicked" />
+
 
     </VerticalStackLayout>
 </ContentPage>

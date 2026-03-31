@@ -5,6 +5,7 @@ namespace Roomies
     public partial class NotificationsPage : ContentPage
     {
         private Membru _user;
+        private bool _isActive = false;
 
         public NotificationsPage(Membru user)
         {
@@ -12,71 +13,69 @@ namespace Roomies
             _user = user;
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
+            _isActive = true;
+            _ = LoadNotifications();
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            _isActive = false;
+        }
+
+        private async Task LoadNotifications()
+        {
+            if (!_isActive) return;
 
             var db = ServiceHelper.GetService<DatabaseService>();
-            var notifications = await db.GetNotificationsForUserAsync(_user.Id);
 
             NotificationsContainer.Children.Clear();
 
+            var notifications = await db.GetNotificationsForUserAsync(_user.Id);
+
+            if (!_isActive) return;
+
             foreach (var notif in notifications)
             {
-                var border = new Border
-                {
-                    Stroke = Colors.LightGray,
-                    StrokeThickness = 1,
-                    Background = Colors.White,
-                    StrokeShape = new RoundRectangle { CornerRadius = 10 },
-                    Padding = 10,
-                    Margin = new Thickness(0, 0, 0, 10),
-
-                    Content = new Label
+                NotificationsContainer.Children.Add(
+                    new Border
                     {
-                        Text = notif.Text,
-                        FontSize = 16,
-                        TextColor = Colors.Black
+                        Stroke = Colors.LightGray,
+                        StrokeThickness = 1,
+                        Background = Colors.White,
+                        StrokeShape = new RoundRectangle { CornerRadius = 10 },
+                        Padding = 10,
+                        Margin = new Thickness(0, 0, 0, 10),
+                        Content = new Label
+                        {
+                            Text = notif.Text,
+                            FontSize = 16,
+                            TextColor = Colors.Black
+                        }
                     }
-                };
-
-                NotificationsContainer.Children.Add(border);
+                );
             }
+
             var pendingRequests = await db.GetPendingRequestsForUserAsync(_user.Id);
+
+            if (!_isActive) return;
 
             foreach (var req in pendingRequests)
             {
                 var sender = await db.GetMembruByIdAsync(req.SenderId);
 
-                var nameLabel = new Label
-                {
-                    Text = $"{sender.Nume} {sender.Prenume} ti-a trimis o cerere:",
-                    FontAttributes = FontAttributes.Bold,
-                    FontSize = 18,
-                    TextColor = Colors.Black
-                };
-
-                var messageLabel = new Label
-                {
-                    Text = $"Mesaj: \"{req.Mesaj}\"",
-                    FontSize = 16,
-                    TextColor = Colors.DarkGray
-                };
-                var dateLabel = new Label
-                {
-                    Text = $"Trimisă la: {req.Data:dd MMM yyyy, HH:mm}",
-                    FontSize = 14,
-                    TextColor = Colors.Gray
-                };
-
+                // FIX 2: null check pentru sender
+                if (sender == null) continue;
 
                 var acceptButton = new Button
                 {
                     Text = "Accepta",
                     BackgroundColor = Colors.Green,
                     TextColor = Colors.White,
-                    CornerRadius = 8,
-                    Padding = new Thickness(10, 5)
+                    CornerRadius = 8
                 };
 
                 var rejectButton = new Button
@@ -84,56 +83,46 @@ namespace Roomies
                     Text = "Respinge",
                     BackgroundColor = Colors.Red,
                     TextColor = Colors.White,
-                    CornerRadius = 8,
-                    Padding = new Thickness(10, 5)
+                    CornerRadius = 8
                 };
 
                 acceptButton.Clicked += async (s, e) =>
                 {
-                    await db.UpdateFriendRequestStatusAsync(req.ID, "Accepted");
+                    await db.UpdateFriendRequestStatusAsync(req.Id, "Accepted");
                     await db.AddFriendshipAsync(req.SenderId, req.ReceiverId);
-
                     await DisplayAlertAsync("Succes", "Ai acceptat cererea!", "OK");
-                    OnAppearing();
+                    await LoadNotifications();
                 };
-
 
                 rejectButton.Clicked += async (s, e) =>
                 {
-                    await db.UpdateFriendRequestStatusAsync(req.ID, "Rejected");
+                    await db.UpdateFriendRequestStatusAsync(req.Id, "Rejected");
                     await DisplayAlertAsync("Respins", "Ai respins cererea.", "OK");
-                    OnAppearing();
+                    await LoadNotifications();
                 };
 
-                var buttonRow = new HorizontalStackLayout
-                {
-                    Spacing = 10,
-                    Children = { acceptButton, rejectButton }
-                };
-
-                var border = new Border
-                {
-                    Stroke = Colors.LightGray,
-                    StrokeThickness = 1,
-                    Background = Colors.White,
-                    StrokeShape = new RoundRectangle { CornerRadius = 10 },
-                    Padding = 10,
-                    Margin = new Thickness(0, 0, 0, 10),
-
-                    Content = new VerticalStackLayout
+                NotificationsContainer.Children.Add(
+                    new Border
                     {
-                        Spacing = 5,
-                        Children =
+                        Stroke = Colors.LightGray,
+                        StrokeThickness = 1,
+                        Background = Colors.White,
+                        StrokeShape = new RoundRectangle { CornerRadius = 10 },
+                        Padding = 10,
+                        Margin = new Thickness(0, 0, 0, 10),
+                        Content = new VerticalStackLayout
                         {
-                            nameLabel,
-                            messageLabel,
-                            dateLabel,
-                            buttonRow
+                            Spacing = 5,
+                            Children =
+                            {
+                                new Label { Text = $"{sender.Nume} {sender.Prenume} ți-a trimis o cerere:", FontAttributes = FontAttributes.Bold },
+                                new Label { Text = $"Mesaj: \"{req.Mesaj}\"" },
+                                new Label { Text = $"Trimisă la: {req.Data:dd MMM yyyy, HH:mm}" },
+                                new HorizontalStackLayout { Spacing = 10, Children = { acceptButton, rejectButton } }
+                            }
                         }
                     }
-                };
-
-                NotificationsContainer.Children.Add(border);
+                );
             }
         }
     }

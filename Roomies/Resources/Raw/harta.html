@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #confirmBtn {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            padding: 12px 24px;
+            background: #4DA3FF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <button id="confirmBtn" onclick="confirmLocation()">Confirma locatia</button>
+
+    <script>
+        var map;
+        var marker;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 46.7712, lng: 23.6236 },
+                zoom: 13
+            });
+
+            map.addListener('click', function (event) {
+                placeMarker(event.latLng);
+            });
+        }
+
+        function placeMarker(location) {
+            if (marker)
+                marker.setMap(null);
+
+            marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                draggable: true
+            });
+
+            document.getElementById('confirmBtn').style.display = 'block';
+        }
+
+        function confirmLocation() {
+            if (marker) {
+                var lat = marker.getPosition().lat();
+                var lng = marker.getPosition().lng();
+                window.location.href =
+                    'roomies-app://confirm?lat=' + encodeURIComponent(lat) +
+                    '&lng=' + encodeURIComponent(lng);
+            }
+        }
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjgOG9VwPZke502xEO7UELq-9f9I7kw20&callback=initMap" async defer></script>
+</body>
+
+</html>

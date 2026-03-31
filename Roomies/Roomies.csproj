@@ -66,10 +66,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.5" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.50" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.5" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
-		<PackageReference Include="Syncfusion.Maui.DataForm" Version="32.2.9" />
+		<PackageReference Include="Syncfusion.Maui.DataForm" Version="33.1.44" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -82,7 +83,13 @@
 	  <MauiXaml Update="NotificationsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="PaginaChat.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="PaginaFiltre.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="PaginaHarta.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="ProfilePage.xaml">

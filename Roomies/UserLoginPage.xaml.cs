@@ -1,10 +1,11 @@
 using Roomies;
+using System.Net.Http.Json;
 
 namespace Roomies
 {
     public partial class UserLoginPage : ContentPage
     {
-        private readonly DatabaseService _db;
+        private DatabaseService _db;
 
         public UserLoginPage()
         {
@@ -23,45 +24,36 @@ namespace Roomies
                 return;
             }
 
-            var membru = await _db.GetMembruByEmailAsync(email);
+            var client = new HttpClient();
+            var response = await client.PostAsJsonAsync(
+                "http://10.0.2.2:5137/api/ControllerAutentificare/login",
+                new { Email = email, Parola = parola }
+            );
 
-            if (membru == null)
+            if (!response.IsSuccessStatusCode)
             {
-                await DisplayAlertAsync("Eroare", "Utilizatorul nu există.", "OK");
+                await DisplayAlertAsync("Eroare", "Email sau parolă greșită.", "OK");
                 return;
             }
 
-            bool ok = PasswordHelper.VerifyPassword(parola, membru.ParolaHash, membru.ParolaSalt);
+            var rezultat = await response.Content.ReadFromJsonAsync<LoginResponse>();
 
-            if (!ok)
-            {
-                await DisplayAlertAsync("Eroare", "Parola este incorectă.", "OK");
-                return;
-            }
+            App.JwtToken = rezultat.token;
 
             await DisplayAlertAsync("Succes", "Autentificare reușită!", "OK");
 
-            var app = Application.Current;
-            if (app?.Windows != null && app.Windows.Count > 0)
-            {
-                app.Windows[0].Page = new NavigationPage(new MainPage(membru));
-            }
-            else if (Navigation != null)
-            {
-                await Navigation.PushAsync(new MainPage(membru));
-            }
+            Application.Current.MainPage = new NavigationPage(new MainPage(rezultat.user));
         }
 
-        private async void OnSignOutClicked(object sender, EventArgs e)
+        private void OnCreateAccountClicked(object sender, EventArgs e)
         {
-            bool confirm = await DisplayAlertAsync("Confirmare",
-                "Sigur vrei să ieși de pe cont?", "Da", "Nu");
-
-            if (!confirm)
-                return;
-
-            var page = ServiceHelper.GetService<LoginPage>();
-            await Navigation.PushAsync(page);
+            Application.Current.MainPage = new NavigationPage(new LoginPage());
         }
+    }
+
+    public class LoginResponse
+    {
+        public string token { get; set; }
+        public Membru user { get; set; }
     }
 }
