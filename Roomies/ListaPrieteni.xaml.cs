@@ -18,7 +18,7 @@ namespace Roomies
         {
             base.OnAppearing();
 
-            var friends = await _db.GetFriendsAsync(_user.Id);
+            var friends = await _db.GetPrieteniAsync(_user.Id);
 
             FriendsContainer.Children.Clear();
 

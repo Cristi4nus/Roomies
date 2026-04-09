@@ -15,7 +15,7 @@ namespace RoomiesApi.Hubs
         {
             await _db.SaveMessageAsync(int.Parse(senderId), int.Parse(receiverId), message);
 
-            await Clients.User(receiverId).SendAsync("ReceiveMessage", senderId, message);
+            await Clients.User(receiverId).SendAsync("PrimesteMesaj", senderId, message);
         }
     }
 }

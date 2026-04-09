@@ -9,7 +9,7 @@ namespace Roomies
     {
         private readonly ServiciuChat _chat;
         private readonly Membru _me;
-        private readonly Membru _friend;
+        private readonly Membru prieten;
         private bool _istoricIncarcat = false;
 
         public PaginaChat(Membru me, Membru friend)
@@ -18,18 +18,18 @@ namespace Roomies
 
             _chat = ServiceHelper.GetService<ServiciuChat>();
             _me = me;
-            _friend = friend;
+            prieten = friend;
 
-            _chat.Connection.On<string, string>("ReceiveMessage", async (fromId, message) =>
+            _chat.Connection.On<string, string>("PrimesteMesaj", async (fromId, message) =>
             {
-                if (fromId == _friend.Id.ToString())
+                if (fromId == prieten.Id.ToString())
                 {
                     await MainThread.InvokeOnMainThreadAsync(async () =>
                     {
                         if (message.StartsWith("LOCATION:"))
-                            AddLocationMessage($"{_friend.Nume} {_friend.Prenume}", message);
+                            AddLocationMessage($"{prieten.Nume} {prieten.Prenume}", message);
                         else
-                            await AddTextMessage($"{_friend.Nume} {_friend.Prenume}", message, Colors.Black);
+                            await AddTextMessage($"{prieten.Nume} {prieten.Prenume}", message, Colors.Black);
                     });
                 }
             });
@@ -38,7 +38,7 @@ namespace Roomies
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            _chat.Connection.Remove("ReceiveMessage");
+            _chat.Connection.Remove("PrimesteMesaj");
         }
 
         protected override async void OnAppearing()
@@ -60,13 +60,13 @@ namespace Roomies
             _istoricIncarcat = true;
 
             var db = ServiceHelper.GetService<DatabaseService>();
-            var istoric = await db.GetConversationAsync(_me.Id, _friend.Id);
+            var istoric = await db.GetConversationAsync(_me.Id, prieten.Id);
 
             foreach (var msg in istoric)
             {
                 if (msg.Text.StartsWith("LOCATION:"))
                 {
-                    var sender = msg.SenderId == _me.Id ? "Eu" : $"{_friend.Nume} {_friend.Prenume}";
+                    var sender = msg.SenderId == _me.Id ? "Eu" : $"{prieten.Nume} {prieten.Prenume}";
                     AddLocationMessage(sender, msg.Text);
                 }
                 else
@@ -74,7 +74,7 @@ namespace Roomies
                     if (msg.SenderId == _me.Id)
                         await AddTextMessage("Eu", msg.Text, Colors.Blue);
                     else
-                        await AddTextMessage($"{_friend.Nume} {_friend.Prenume}", msg.Text, Colors.Black);
+                        await AddTextMessage($"{prieten.Nume} {prieten.Prenume}", msg.Text, Colors.Black);
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace Roomies
             if (string.IsNullOrWhiteSpace(text))
                 return;
 
-            await _chat.SendMessage(_me.Id.ToString(), _friend.Id.ToString(), text);
+            await _chat.SendMessage(_me.Id.ToString(), prieten.Id.ToString(), text);
             await AddTextMessage("Eu", text, Colors.Blue);
             MessageEntry.Text = "";
         }
@@ -100,7 +100,7 @@ namespace Roomies
 
             await _chat.SendLocation(
                 _me.Id.ToString(),
-                _friend.Id.ToString(),
+                prieten.Id.ToString(),
                 result.Value.Lat,
                 result.Value.Lng
             );

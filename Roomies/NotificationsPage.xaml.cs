@@ -34,7 +34,7 @@ namespace Roomies
 
             NotificationsContainer.Children.Clear();
 
-            var notifications = await db.GetNotificationsForUserAsync(_user.Id);
+            var notifications = await db.GetNotificariForUserAsync(_user.Id);
 
             if (!_isActive) return;
 

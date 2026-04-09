@@ -28,7 +28,9 @@ public class DatabaseService
             Descriere TEXT,
             Email TEXT NOT NULL UNIQUE,
             ParolaHash BLOB,
-            ParolaSalt BLOB
+            ParolaSalt BLOB,
+            EmailConfirmat INTEGER NOT NULL DEFAULT 0,
+            TokenConfirmare TEXT
         );
     ");
 
@@ -50,7 +52,8 @@ public class DatabaseService
             Data TEXT
             );
             ");
-            connection.Execute(@"
+
+        connection.Execute(@"
             CREATE TABLE IF NOT EXISTS Notificari (
             Id INTEGER PRIMARY KEY AUTOINCREMENT,
             UserId INTEGER NOT NULL,
@@ -58,7 +61,8 @@ public class DatabaseService
             Data TEXT NOT NULL
             );
             ");
-            connection.Execute(@"
+
+        connection.Execute(@"
         CREATE TABLE IF NOT EXISTS Mesaje (
             Id INTEGER PRIMARY KEY AUTOINCREMENT,
             SenderId INTEGER NOT NULL,
@@ -67,48 +71,53 @@ public class DatabaseService
             Data TEXT NOT NULL
             );
             ");
-
+        connection.Execute(@"
+        CREATE TABLE IF NOT EXISTS AlarmeFiltre (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            UserId INTEGER NOT NULL,
+            Gen TEXT,
+            Zona TEXT,
+            Buget TEXT,
+            StilViata TEXT,
+            Preferinte TEXT
+        );
+    ");
     }
-
 
     public async Task<Membru> GetMembruByEmailAsync(string email)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         return await connection.QueryFirstOrDefaultAsync<Membru>(
             "SELECT * FROM Membri WHERE Email = @Email",
             new { Email = email });
     }
+
     public async Task<Membru?> GetMembruByIdAsync(int id)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         return await connection.QueryFirstOrDefaultAsync<Membru>(
             "SELECT * FROM Membri WHERE Id = @Id",
             new { Id = id });
     }
 
-
     public async Task AddMembruAsync(Membru membru)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         await connection.ExecuteAsync(@"
         INSERT INTO Membri 
         (Avatar, Nume, Prenume, Varsta, Gen, Facultate, NumarTelefon, ZonaPreferata,
          BugetMaxim, PerioadaDeSedere, StilDeViata, PreferinteDeTrai, Descriere,
-         Email, ParolaHash, ParolaSalt)
+         Email, ParolaHash, ParolaSalt, TokenConfirmare)
         VALUES 
         (@Avatar, @Nume, @Prenume, @Varsta, @Gen, @Facultate, @NumarTelefon, @ZonaPreferata,
          @BugetMaxim, @PerioadaDeSedere, @StilDeViata, @PreferinteDeTrai, @Descriere,
-         @Email, @ParolaHash, @ParolaSalt)",
-            membru);
+         @Email, @ParolaHash, @ParolaSalt, @TokenConfirmare)",
+        membru);
     }
 
     public async Task AddPrietenAsync(int user1, int user2)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         await connection.ExecuteAsync(
             "INSERT INTO Prieteni (User1Id, User2Id) VALUES (@u1, @u2)",
             new { u1 = user1, u2 = user2 });
@@ -117,7 +126,6 @@ public class DatabaseService
     public async Task RemovePrietenAsync(int user1, int user2)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         await connection.ExecuteAsync(
             @"DELETE FROM Prieteni 
           WHERE (User1Id = @u1 AND User2Id = @u2)
@@ -128,7 +136,6 @@ public class DatabaseService
     public async Task<List<int>> GetPrieteniIdsAsync(int userId)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         var ids = await connection.QueryAsync<int>(
             @"SELECT 
             CASE 
@@ -138,44 +145,39 @@ public class DatabaseService
           FROM Prieteni
           WHERE User1Id = @id OR User2Id = @id",
             new { id = userId });
-
         return ids.ToList();
     }
+
     public async Task<List<Membru>> GetAllMembriAsync()
     {
         using var connection = new SqliteConnection(_connectionString);
         var result = await connection.QueryAsync<Membru>("SELECT * FROM Membri");
         return result.ToList();
     }
+
     public async Task AddNotificationAsync(int userId, string text)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         await connection.ExecuteAsync(
             @"INSERT INTO Notificari (UserId, Text, Data)
           VALUES (@u, @t, @d)",
-            new { u = userId, t = text, d = DateTime.Now }
-        );
+            new { u = userId, t = text, d = DateTime.Now });
     }
 
     public async Task<List<Notificare>> GetNotificationsForUserAsync(int userId)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         var result = await connection.QueryAsync<Notificare>(
             @"SELECT * FROM Notificari 
           WHERE UserId = @id 
           ORDER BY Data DESC",
             new { id = userId });
-
         return result.ToList();
     }
-
 
     public async Task UpdateMembruAsync(Membru membru)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         await connection.ExecuteAsync(@"
         UPDATE Membri SET
             Avatar = @Avatar,
@@ -195,79 +197,86 @@ public class DatabaseService
         WHERE Id = @Id",
             membru);
     }
+    public async Task DeleteMembruAsync(int id)
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        await connection.ExecuteAsync("DELETE FROM Membri WHERE Id = @id", new { id });
+        await connection.ExecuteAsync(
+            "DELETE FROM Prieteni WHERE User1Id = @id OR User2Id = @id", new { id });
+        await connection.ExecuteAsync(
+            "DELETE FROM CereriPrietenie WHERE SenderId = @id OR ReceiverId = @id", new { id });
+        await connection.ExecuteAsync(
+            "DELETE FROM Notificari WHERE UserId = @id", new { id });
+        await connection.ExecuteAsync(
+            "DELETE FROM Mesaje WHERE SenderId = @id OR ReceiverId = @id", new { id });
+        await connection.ExecuteAsync(
+            "DELETE FROM AlarmeFiltre WHERE UserId = @id", new { id });
+    }
 
     public async Task<List<CererePrietenie>> GetPendingRequestsForUserAsync(int userId)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         var result = await connection.QueryAsync<CererePrietenie>(
             @"SELECT * FROM CereriPrietenie 
           WHERE ReceiverId = @id AND Status = 'Pending'",
             new { id = userId });
-
         return result.ToList();
     }
+
     public async Task<bool> HasPendingRequestAsync(int senderId, int receiverId)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         var result = await connection.QueryFirstOrDefaultAsync<CererePrietenie>(
             @"SELECT * FROM CereriPrietenie 
           WHERE SenderId = @s AND ReceiverId = @r AND Status = 'Pending'",
             new { s = senderId, r = receiverId });
-
         return result != null;
     }
+
     public async Task<bool> HasReversePendingRequestAsync(int senderId, int receiverId)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         var result = await connection.QueryFirstOrDefaultAsync<CererePrietenie>(
             @"SELECT * FROM CereriPrietenie 
           WHERE SenderId = @r AND ReceiverId = @s AND Status = 'Pending'",
             new { s = senderId, r = receiverId });
-
         return result != null;
     }
+
     public async Task SendFriendRequestAsync(CererePrietenie cerere)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         cerere.Status = "Pending";
         cerere.Data = DateTime.Now;
-
         await connection.ExecuteAsync(
             @"INSERT INTO CereriPrietenie (SenderId, ReceiverId, Mesaj, Status, Data)
           VALUES (@SenderId, @ReceiverId, @Mesaj, @Status, @Data)",
-            cerere
-        );
-        await AddNotificationAsync(cerere.ReceiverId, $"Ai primit o cerere de prietenie de la userul {cerere.SenderId}");
-
+            cerere);
+        await AddNotificationAsync(cerere.ReceiverId,
+            $"Ai primit o cerere de prietenie de la userul {cerere.SenderId}");
     }
+
     public async Task UpdateFriendRequestStatusAsync(int requestId, string status)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         await connection.ExecuteAsync(
             @"UPDATE CereriPrietenie 
           SET Status = @st 
           WHERE Id = @id",
-            new { st = status, id = requestId }
-        );
+            new { st = status, id = requestId });
     }
+
     public async Task<bool> AreFriendsAsync(int user1, int user2)
     {
         using var connection = new SqliteConnection(_connectionString);
-
         var result = await connection.QueryFirstOrDefaultAsync<Prieteni>(
             @"SELECT * FROM Prieteni 
           WHERE (User1Id = @u1 AND User2Id = @u2)
              OR (User1Id = @u2 AND User2Id = @u1)",
-            new { u1 = user1, u2 = user2 }
-        );
-
+            new { u1 = user1, u2 = user2 });
         return result != null;
     }
+
     public async Task SaveMessageAsync(int senderId, int receiverId, string text)
     {
         using var connection = new SqliteConnection(_connectionString);
@@ -287,5 +296,33 @@ public class DatabaseService
             new { u1 = user1, u2 = user2 });
         return result.ToList();
     }
+    public async Task AddAlarmaAsync(AlarmaFiltre alarma)
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        await connection.ExecuteAsync(
+            @"INSERT INTO AlarmeFiltre (UserId, Gen, Zona, Buget, StilViata, Preferinte)
+          VALUES (@UserId, @Gen, @Zona, @Buget, @StilViata, @Preferinte)",
+            alarma);
+    }
 
+    public async Task<List<AlarmaFiltre>> GetAllAlarmeAsync()
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        var result = await connection.QueryAsync<AlarmaFiltre>("SELECT * FROM AlarmeFiltre");
+        return result.ToList();
+    }
+    public async Task<Membru?> GetMembruByTokenAsync(string token)
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        return await connection.QueryFirstOrDefaultAsync<Membru>(
+            "SELECT * FROM Membri WHERE TokenConfirmare = @t", new { t = token });
+    }
+
+    public async Task ConfirmEmailAsync(int userId)
+    {
+        using var connection = new SqliteConnection(_connectionString);
+        await connection.ExecuteAsync(
+            "UPDATE Membri SET EmailConfirmat = 1, TokenConfirmare = NULL WHERE Id = @id",
+            new { id = userId });
+    }
 }

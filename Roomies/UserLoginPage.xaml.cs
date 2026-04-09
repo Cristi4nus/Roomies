@@ -27,21 +27,22 @@ namespace Roomies
             var client = new HttpClient();
             var response = await client.PostAsJsonAsync(
                 "http://10.0.2.2:5137/api/ControllerAutentificare/login",
-                new { Email = email, Parola = parola }
-            );
+                new { Email = email, Parola = parola });
 
             if (!response.IsSuccessStatusCode)
             {
-                await DisplayAlertAsync("Eroare", "Email sau parolă greșită.", "OK");
+                var mesaj = await response.Content.ReadAsStringAsync();
+                if (mesaj.Contains("EMAIL_NECONFIRMAT"))
+                    await DisplayAlertAsync("Cont neconfirmat",
+                        "Te rugăm să confirmi adresa de email înainte de a te loga. Verifică inbox-ul.", "OK");
+                else
+                    await DisplayAlertAsync("Eroare", "Email sau parolă greșită.", "OK");
                 return;
             }
 
             var rezultat = await response.Content.ReadFromJsonAsync<LoginResponse>();
-
             App.JwtToken = rezultat.token;
-
             await DisplayAlertAsync("Succes", "Autentificare reușită!", "OK");
-
             Application.Current.MainPage = new NavigationPage(new MainPage(rezultat.user));
         }
 

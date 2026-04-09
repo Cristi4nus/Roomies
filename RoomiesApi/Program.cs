@@ -23,7 +23,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidateAudience = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("cheia_mea_super_mega_sigura_pentru_api"))
+                Encoding.UTF8.GetBytes("cheia_super_sigura_a_lui_cristi_pentru_api"))
         };
         options.Events = new JwtBearerEvents
         {
@@ -53,6 +53,7 @@ builder.Services.AddCors(options =>
               .SetIsOriginAllowed(_ => true);
     });
 });
+builder.Services.AddSingleton<ServiciuEmail>();
 
 var app = builder.Build();
 

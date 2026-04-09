@@ -28,17 +28,23 @@ namespace RoomiesApi.Controllers
             var membru = await _db.GetMembruByIdAsync(id);
             if (membru == null)
                 return NotFound();
-
             return Ok(membru);
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] Membru membru)
         {
             if (id != membru.Id)
                 return BadRequest("Id mismatch");
-
             await _db.UpdateMembruAsync(membru);
             return Ok("Membru actualizat");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _db.DeleteMembruAsync(id);
+            return Ok("Cont șters");
         }
     }
 }

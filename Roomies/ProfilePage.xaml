@@ -18,35 +18,30 @@
 
             <ScrollView Orientation="Horizontal">
                 <HorizontalStackLayout Spacing="15" Padding="10">
-
                     <Image Source="avatar1.png" HeightRequest="80">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnAvatarTapped"
                                                   CommandParameter="avatar1.png"/>
                         </Image.GestureRecognizers>
                     </Image>
-
                     <Image Source="avatar2.png" HeightRequest="80">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnAvatarTapped"
                                                   CommandParameter="avatar2.png"/>
                         </Image.GestureRecognizers>
                     </Image>
-
                     <Image Source="avatar3.png" HeightRequest="80">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnAvatarTapped"
                                                   CommandParameter="avatar3.png"/>
                         </Image.GestureRecognizers>
                     </Image>
-
                     <Image Source="avatar4.png" HeightRequest="80">
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnAvatarTapped"
                                                   CommandParameter="avatar4.png"/>
                         </Image.GestureRecognizers>
                     </Image>
-
                 </HorizontalStackLayout>
             </ScrollView>
 
@@ -89,6 +84,7 @@
                     CornerRadius="10"
                     HeightRequest="50"
                     Clicked="OnUpdateProfileClicked" />
+
             <Button x:Name="LogOut"
                     Text="Deconectare"
                     BackgroundColor="#2B0B98"
@@ -96,6 +92,14 @@
                     CornerRadius="10"
                     HeightRequest="50"
                     Clicked="OnLogoutClicked" />
+
+            <Button x:Name="DeleteAccountButton"
+                    Text="Șterge Cont"
+                    BackgroundColor="#2B0B98"
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Clicked="OnDeleteAccountClicked" />
 
         </VerticalStackLayout>
     </ScrollView>

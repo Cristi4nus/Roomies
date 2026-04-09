@@ -12,6 +12,7 @@ namespace Roomies
         public DatabaseService(string dbPath)
         {
             _db = new SQLiteAsyncConnection(dbPath);
+            _db.CreateTableAsync<AlarmaFiltre>().Wait();
         }
 
         public async Task InitializeTablesAsync()
@@ -19,49 +20,36 @@ namespace Roomies
             await _db.CreateTableAsync<AlarmaFiltre>();
         }
 
-        public async Task<List<Notificare>> GetNotificationsForUserAsync(int userId)
+        public async Task<List<Notificare>> GetNotificariForUserAsync(int userId)
+        {
+            var client =new HttpClient();
+            var response = await  client.GetAsync($"http://10.0.2.2:5137/api/notificari/{userId}");
+             return await response.Content.ReadFromJsonAsync<List<Notificare>>();
+        }
+        //initializare lista prieteni
+        public async Task<List<Membru>> GetPrieteniAsync(int userId)
         {
             var client = new HttpClient();
-            var response = await client.GetAsync($"http://10.0.2.2:5137/api/notificari/{userId}");
-
-            if (!response.IsSuccessStatusCode)
-                return new List<Notificare>();
-
-            return await response.Content.ReadFromJsonAsync<List<Notificare>>();
+            var raspuns = await client.GetAsync($"http://10.0.2.2:5137/api/prieteni/{userId}");
+            return await raspuns.Content.ReadFromJsonAsync<List<Membru>>();
         }
-
-
-        public async Task<List<Membru>> GetFriendsAsync(int userId)
+        //adaugare alarma in caz ca utilizatorul nu sia gasit persoana compatibila
+        public async Task AddAlarmAsync(AlarmaFiltre alarm)
         {
             var client = new HttpClient();
-            var response = await client.GetAsync($"http://10.0.2.2:5137/api/prieteni/{userId}");
-
-            if (!response.IsSuccessStatusCode)
-                return new List<Membru>();
-
-            return await response.Content.ReadFromJsonAsync<List<Membru>>();
-        }
-
-        public Task<int> AddAlarmAsync(AlarmaFiltre alarm)
-        {
-            return _db.InsertAsync(alarm);
+            var response = await client.PostAsJsonAsync("http://10.0.2.2:5137/api/alarme/add", alarm);
+            response.EnsureSuccessStatusCode();
         }
 
         public Task<List<AlarmaFiltre>> GetAlarmsForUserAsync(int userId)
         {
-            return _db.Table<AlarmaFiltre>()
-                      .Where(a => a.UserId == userId)
-                      .ToListAsync();
+           return _db.Table<AlarmaFiltre>().Where(a => a.UserId == userId).ToListAsync();
         }
 
         public async Task AddFriendshipAsync(int user1Id, int user2Id)
         {
             var client = new HttpClient();
-            var response = await client.PostAsync(
-                $"http://10.0.2.2:5137/api/prieteni/add?user1={user1Id}&user2={user2Id}",
-                null
-            );
-
+            var response = await client.PostAsync($"http://10.0.2.2:5137/api/prieteni/add?user1={user1Id}&user2={user2Id}",null);
             response.EnsureSuccessStatusCode();
         }
 
@@ -69,10 +57,6 @@ namespace Roomies
         {
             var client = new HttpClient();
             var response = await client.GetAsync("http://10.0.2.2:5137/api/membri");
-
-            if (!response.IsSuccessStatusCode)
-                return new List<Membru>();
-
             return await response.Content.ReadFromJsonAsync<List<Membru>>();
         }
 
@@ -80,121 +64,80 @@ namespace Roomies
         {
             var client = new HttpClient();
             var response = await client.GetAsync($"http://10.0.2.2:5137/api/membri/{id}");
-
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            return await response.Content.ReadFromJsonAsync<Membru>();
+                return await response.Content.ReadFromJsonAsync<Membru>();
         }
 
         public async Task<List<CererePrietenie>> GetPendingRequestsForUserAsync(int userId)
         {
-            var client = new HttpClient();
-            var response = await client.GetAsync($"http://10.0.2.2:5137/api/cereri/pending/{userId}");
-
-            if (!response.IsSuccessStatusCode)
-                return new List<CererePrietenie>();
-
-            return await response.Content.ReadFromJsonAsync<List<CererePrietenie>>();
+             var client = new HttpClient();
+             var response = await client.GetAsync($"http://10.0.2.2:5137/api/cereri/pending/{userId}");
+             return await response.Content.ReadFromJsonAsync<List<CererePrietenie>>();
         }
 
         public async Task UpdateFriendRequestStatusAsync(int requestId, string statusNou)
         {
-            var client = new HttpClient();
-
-            var body = new
-            {
-                requestId = requestId,
-                status = statusNou
-            };
-
-            var response = await client.PostAsJsonAsync(
-                "http://10.0.2.2:5137/api/cereri/update",
-                body
-            );
-
-            response.EnsureSuccessStatusCode();
+             var client = new HttpClient();
+             var body = new { requestId = requestId, status = statusNou };
+             var response = await client.PostAsJsonAsync("http://10.0.2.2:5137/api/cereri/update", body);
+             response.EnsureSuccessStatusCode();
         }
 
         public async Task<bool> UpdateMembruAsync(Membru membru)
         {
-
             var client = new HttpClient();
-            var response = await client.PutAsJsonAsync(
-                $"http://10.0.2.2:5137/api/membri/{membru.Id}",
-                membru
-            );
-
+            var response = await client.PutAsJsonAsync($"http://10.0.2.2:5137/api/membri/{membru.Id}", membru);
             return response.IsSuccessStatusCode;
         }
 
+        public async Task<bool> DeleteContAsync(int userId)
+        {
+            var client = new HttpClient();
+            var response = await client.DeleteAsync($"http://10.0.2.2:5137/api/membri/{userId}");
+            return response.IsSuccessStatusCode;
+        }
 
         public async Task<bool> AreFriendsAsync(int user1Id, int user2Id)
         {
             var client = new HttpClient();
-            var response = await client.GetAsync(
-                $"http://10.0.2.2:5137/api/prieteni/arefriends?user1={user1Id}&user2={user2Id}"
-            );
-
-            if (!response.IsSuccessStatusCode)
-                return false;
-
+            var response = await client.GetAsync($"http://10.0.2.2:5137/api/prieteni/arefriends?user1={user1Id}&user2={user2Id}");
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
         public async Task<bool> HasPendingRequestAsync(int senderId, int receiverId)
         {
             var client = new HttpClient();
-            var response = await client.GetAsync(
-                $"http://10.0.2.2:5137/api/cereri/haspending?senderId={senderId}&receiverId={receiverId}"
-            );
-
-            if (!response.IsSuccessStatusCode)
-                return false;
-
+            var response = await client.GetAsync( $"http://10.0.2.2:5137/api/cereri/haspending?senderId={senderId}&receiverId={receiverId}");
             return await response.Content.ReadFromJsonAsync<bool>();
         }
-
+        //daca cineva a trimis deja  o cerere de prietenie atunci da un warning
         public async Task<bool> HasReversePendingRequestAsync(int senderId, int receiverId)
         {
             var client = new HttpClient();
             var response = await client.GetAsync(
-                $"http://10.0.2.2:5137/api/cereri/hasreverse?senderId={senderId}&receiverId={receiverId}"
-            );
-
-            if (!response.IsSuccessStatusCode)
-                return false;
-
+                 $"http://10.0.2.2:5137/api/cereri/hasreverse?senderId={senderId}&receiverId={receiverId}");
             return await response.Content.ReadFromJsonAsync<bool>();
         }
 
         public async Task SendFriendRequestWithNotificationAsync(int senderId, int receiverId, string mesaj)
         {
             var client = new HttpClient();
-
             var cerere = new CererePrietenie
             {
                 SenderId = senderId,
                 ReceiverId = receiverId,
                 Mesaj = mesaj
             };
-
             var response = await client.PostAsJsonAsync(
-                "http://10.0.2.2:5137/api/cereri/send",
-                cerere
-            );
-
+                "http://10.0.2.2:5137/api/cereri/send", cerere);
             response.EnsureSuccessStatusCode();
         }
+        
+        
+        //initializare conversatie 
         public async Task<List<Mesaj>> GetConversationAsync(int user1, int user2)
         {
             var client = new HttpClient();
-            var response = await client.GetAsync(
-                $"http://10.0.2.2:5137/api/mesaje/{user1}/{user2}");
-
-            if (!response.IsSuccessStatusCode)
-                return new List<Mesaj>();
-
+            var response = await client.GetAsync( $"http://10.0.2.2:5137/api/mesaje/{user1}/{user2}");
             return await response.Content.ReadFromJsonAsync<List<Mesaj>>();
         }
     }

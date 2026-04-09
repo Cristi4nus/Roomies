@@ -19,6 +19,8 @@
         public string Email { get; set; }
         public byte[]? ParolaHash { get; set; }
         public byte[]? ParolaSalt { get; set; }
+        public int EmailConfirmat { get; set; } = 0;
+        public string? TokenConfirmare { get; set; }
     }
 
 }
