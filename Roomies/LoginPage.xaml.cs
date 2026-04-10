@@ -2,6 +2,7 @@ using Roomies;
 using System;
 using System.Collections.Generic;
 using System.Net.Http.Json;
+using Roomies.Models;
 
 namespace Roomies
 {

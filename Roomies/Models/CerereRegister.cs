@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Roomies
+namespace Roomies.Models
 {
     public class CerereRegister
     {

@@ -1,3 +1,5 @@
+using Roomies.Models;
+
 namespace Roomies
 {
     public partial class PaginaFiltre : ContentPage

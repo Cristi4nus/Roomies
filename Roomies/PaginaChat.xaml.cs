@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Maui.ApplicationModel;
 using Microsoft.Maui.Controls;
+using Roomies.Models;
 using Roomies;
 
 namespace Roomies
@@ -126,7 +127,7 @@ namespace Roomies
 
             var button = new Button
             {
-                Text = $"{sender} a trimis o locație 📍",
+                Text = $"{sender} a trimis o locație",
                 BackgroundColor = Colors.LightGray
             };
 

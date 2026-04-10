@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Roomies.Models;
+using SQLite;
 using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading.Tasks;

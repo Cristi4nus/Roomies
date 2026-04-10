@@ -1,5 +1,5 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
-using Roomies;
+using Roomies.Models;
 
 namespace Roomies
 {

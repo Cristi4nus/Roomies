@@ -1,4 +1,5 @@
 using Roomies;
+using Roomies.Models;
 
 namespace Roomies
 {
