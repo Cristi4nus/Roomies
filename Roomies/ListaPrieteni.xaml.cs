@@ -30,6 +30,7 @@ namespace Roomies
 
                 card.CardTapped += async (s, e) =>
                 {
+                    //user false = nu este propriul profil, afiseaza toate ca read only
                     await Navigation.PushAsync(new ProfilePage(friend, false));
                 };
 

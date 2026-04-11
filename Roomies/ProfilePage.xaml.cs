@@ -68,13 +68,11 @@ namespace Roomies
             editorDescriere.Text = _user.Descriere;
             InputEmail.Text = _user.Email;
 
-            // ✅ FIX: Adaugă .Select(z => z.Trim()) pentru a elimina spațiile după virgulă
             var zoneSelectate = _user.ZonaPreferata?.Split(",").Select(z => z.Trim()).ToList();
             for (int i = 0; i < zonaCheckboxes.Count; i++)
                 if (zoneSelectate?.Contains(Optiuni.ZonePreferate[i]) == true)
                     zonaCheckboxes[i].IsChecked = true;
 
-            // ✅ FIX: Adaugă .Select(p => p.Trim()) pentru a elimina spațiile după virgulă
             var traiSelectat = _user.PreferinteDeTrai?.Split(",").Select(p => p.Trim()).ToList();
             for (int i = 0; i < traiCheckboxes.Count; i++)
                 if (traiSelectat?.Contains(Optiuni.PreferinteDeTrai[i]) == true)

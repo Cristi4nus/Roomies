@@ -24,13 +24,13 @@ namespace RoomiesApi.Services
             {
                 Text = $@"
                     <h2>Bun venit la Roomies!</h2>
-                    <p>Apasă pe butonul de mai jos pentru a confirma contul tău:</p>
+                    <p>Apasa pe buton pentru a confirma contul tau:</p>
                     <a href='{linkConfirmare}'
                        style='background:#4DA3FF;color:white;padding:6px 18px;
                               border-radius:6px;text-decoration:none;'>
-                        Confirmă contul
+                        Confirma contul
                     </a>
-                    <p>Dacă nu ai creat un cont, ignoră acest email.</p>"
+                    <p>Daca nu ai creat un cont, ignora acest email.</p>"
             };
 
             using var smtp = new SmtpClient();

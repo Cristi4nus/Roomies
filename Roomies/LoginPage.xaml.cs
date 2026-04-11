@@ -28,9 +28,9 @@ namespace Roomies
                 GeneratePreferinteCheckboxes();
         }
 
-        private void OnAvatarTapped(object sender, TappedEventArgs e)
+        private void OnAvatarTapped(object sender, TappedEventArgs avatar)
         {
-            _selectedAvatar = e.Parameter.ToString();
+            _selectedAvatar = avatar.Parameter.ToString();
             SelectedAvatarImage.Source = _selectedAvatar;
         }
 
@@ -41,15 +41,14 @@ namespace Roomies
 
             foreach (var zona in Optiuni.ZonePreferate)
             {
-                var cb = new CheckBox();
-                zonaCheckboxes.Add(cb);
+                var box = new CheckBox();
+                zonaCheckboxes.Add(box);
 
                 zonaContainer.Children.Add(new HorizontalStackLayout
                 {
                     Children =
                     {
-                        cb,
-                        new Label { Text = zona, VerticalOptions = LayoutOptions.Center }
+                        box, new Label { Text = zona, VerticalOptions = LayoutOptions.Center }
                     }
                 });
             }
@@ -60,22 +59,21 @@ namespace Roomies
             traiContainer.Children.Clear();
             traiCheckboxes.Clear();
 
-            foreach (var pref in Optiuni.PreferinteDeTrai)
+            foreach (var preferinte in Optiuni.PreferinteDeTrai)
             {
-                var cb = new CheckBox();
-                traiCheckboxes.Add(cb);
+                var box = new CheckBox();
+                traiCheckboxes.Add(box);
 
                 traiContainer.Children.Add(new HorizontalStackLayout
                 {
                     Children =
                     {
-                        cb,
-                        new Label { Text = pref, VerticalOptions = LayoutOptions.Center }
+                        box, new Label { Text = preferinte, VerticalOptions = LayoutOptions.Center }
                     }
                 });
             }
         }
-
+        //validare pentru campuri la login
         private async void OnCreateProfileClicked(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(InputNume.Text) ||
@@ -99,7 +97,7 @@ namespace Roomies
                 return;
             }
 
-            var req = new CerereRegister
+            var request = new CerereRegister
             {
                 Avatar = _selectedAvatar,
                 Nume = InputNume.Text,
@@ -121,16 +119,16 @@ namespace Roomies
             var client = new HttpClient();
             var response = await client.PostAsJsonAsync(
                 "http://10.0.2.2:5137/api/ControllerAutentificare/register",
-                req
+                request
             );
-
+            //eroare daca campurile goale nu sunt completate
             if (!response.IsSuccessStatusCode)
             {
                 await DisplayAlertAsync("Atentie", "Toate campurile sunt obligatorii", "Ok");
                 return;
             }
 
-            await DisplayAlertAsync("Succes", "Profil creat cu succes!", "Ok");
+            await DisplayAlertAsync("Succes", "Profil creat,confirma contul folosind emailul trimis", "Ok");
 
             Application.Current.MainPage = new NavigationPage(new UserLoginPage());
         }
@@ -148,13 +146,13 @@ namespace Roomies
 
         private string GetSelectedPreferinte()
         {
-            var selected = new List<string>();
+            var selectate = new List<string>();
 
             for (int i = 0; i < traiCheckboxes.Count; i++)
                 if (traiCheckboxes[i].IsChecked)
-                    selected.Add(Optiuni.PreferinteDeTrai[i]);
+                    selectate.Add(Optiuni.PreferinteDeTrai[i]);
 
-            return string.Join(", ", selected);
+            return string.Join(", ", selectate);
         }
     }
 }

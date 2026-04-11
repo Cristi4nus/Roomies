@@ -72,7 +72,7 @@ namespace RoomiesApi.Controllers
 
             await _db.AddMembruAsync(membru);
 
-            // trimite emailul de confirmare către adresa introdusă la register
+            // trimite emailul de confirmare
             await emailService.TrimiteEmailConfirmareAsync(req.Email, tokenConfirmare);
 
             // verifică alarme compatibile

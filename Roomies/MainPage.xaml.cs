@@ -122,11 +122,8 @@ namespace Roomies
                     ).ToList();
             }
 
-
-
-
             if (!_isActive) return;
-
+            //golim containerul inainte sa reafisam userii compatibili
             UsersContainer.Children.Clear();
 
             foreach (var user in users)
@@ -157,7 +154,6 @@ namespace Roomies
         {
             if (!_isActive || _user == null)
                 return;
-
             if (Navigation != null)
                 await Navigation.PushAsync(new NotificationsPage(_user));
         }
