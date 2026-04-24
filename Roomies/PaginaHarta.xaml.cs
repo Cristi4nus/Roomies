@@ -1,9 +1,8 @@
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Storage;
-using Microsoft.Maui.ApplicationModel;
 
 namespace Roomies
 {
@@ -16,16 +15,33 @@ namespace Roomies
         {
             InitializeComponent();
             _tcs = new TaskCompletionSource<(double Lat, double Lng)?>();
+
             _ = LoadMapAsync();
         }
 
         private async Task LoadMapAsync()
         {
-            using var stream = await FileSystem.OpenAppPackageFileAsync("harta.html");
-            using var reader = new StreamReader(stream);
-            var html = await reader.ReadToEndAsync();
+            try
+            {
+                using var stream = await FileSystem.OpenAppPackageFileAsync("harta.html");
+                using var reader = new StreamReader(stream);
+                var html = await reader.ReadToEndAsync();
 
-            mapWebView.Source = new HtmlWebViewSource { Html = html };
+                var source = new HtmlWebViewSource { Html = html };
+
+                #if ANDROID
+                                source.BaseUrl = "file:///android_asset/";
+                #elif IOS || MACCATALYST
+                        source.BaseUrl = Foundation.NSBundle.MainBundle.BundlePath;
+                #endif
+
+                mapWebView.Source = source;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[HARTA] Eroare: {ex.Message}");
+                await DisplayAlertAsync("Eroare", $"Nu s-a putut încărca harta: {ex.Message}", "OK");
+            }
         }
 
         public Task<(double Lat, double Lng)?> GetLocationAsync()
@@ -35,37 +51,27 @@ namespace Roomies
 
         private void OnWebViewNavigating(object sender, WebNavigatingEventArgs e)
         {
-            if (e.Url.StartsWith("roomies-app://confirm", StringComparison.OrdinalIgnoreCase))
+            if (e.Url.StartsWith("roomies-app://", StringComparison.OrdinalIgnoreCase))
             {
                 e.Cancel = true;
+                if (_confirmed) return;
 
-                if (_confirmed)
-                    return;
-
-                _confirmed = true;
-
-                var uri = new Uri(e.Url);
-                var parts = System.Web.HttpUtility.ParseQueryString(uri.Query);
-
-                if (double.TryParse(parts["lat"],
-                        System.Globalization.NumberStyles.Any,
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        out double lat)
-                    &&
-                    double.TryParse(parts["lng"],
-                        System.Globalization.NumberStyles.Any,
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        out double lng))
+                try
                 {
-                    _tcs.TrySetResult((lat, lng));
+                    var uri = new Uri(e.Url);
+                    var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
 
-                    MainThread.BeginInvokeOnMainThread(async () =>
+                    if (double.TryParse(query["lat"], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double lat) &&
+                        double.TryParse(query["lng"], System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double lng))
                     {
-                        await Navigation.PopAsync();
-                    });
+                        _confirmed = true;
+                        _tcs.TrySetResult((lat, lng));
+                        MainThread.BeginInvokeOnMainThread(async () => await Navigation.PopAsync());
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($"Eroare parsare: {ex.Message}");
                     _tcs.TrySetResult(null);
                 }
             }
@@ -74,7 +80,6 @@ namespace Roomies
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-
             if (!_tcs.Task.IsCompleted)
                 _tcs.TrySetResult(null);
         }

@@ -62,13 +62,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors();
 
-/*app.Use(async (context, next) =>
+app.Use(async (context, next) =>
 {
     Console.WriteLine($"REQUEST: {context.Request.Method} {context.Request.Path}");
     await next();
     Console.WriteLine($"RESPONSE: {context.Response.StatusCode}");
 });
-*/
+
 
 app.UseAuthentication();
 app.UseAuthorization();

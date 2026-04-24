@@ -282,7 +282,13 @@ public class DatabaseService
         using var connection = new SqliteConnection(_connectionString);
         await connection.ExecuteAsync(
             "INSERT INTO Mesaje (SenderId, ReceiverId, Text, Data) VALUES (@s, @r, @t, @d)",
-            new { s = senderId, r = receiverId, t = text, d = DateTime.Now });
+            new
+            {
+                s = senderId,
+                r = receiverId,
+                t = text,
+                d = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+            });
     }
 
     public async Task<List<Mesaj>> GetConversationAsync(int user1, int user2)

@@ -98,15 +98,40 @@ namespace Roomies
             var result = await harta.GetLocationAsync();
 
             if (result == null) return;
+            string latStr = result.Value.Lat.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string lngStr = result.Value.Lng.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            string locationMessage = $"LOCATION:{latStr},{lngStr}";
 
-            await _chat.SendLocation(
-                _me.Id.ToString(),
-                prieten.Id.ToString(),
-                result.Value.Lat,
-                result.Value.Lng
-            );
+            await _chat.SendMessage(_me.Id.ToString(), prieten.Id.ToString(), locationMessage);
+            AddLocationMessage("Eu", locationMessage);
+        }
 
-            AddLocationMessage("Eu", $"LOCATION:{result.Value.Lat},{result.Value.Lng}");
+        private void AddLocationMessage(string sender, string raw)
+        {
+            try
+            {
+                var coords = raw.Replace("LOCATION:", "").Split(',');
+                double lat = double.Parse(coords[0], System.Globalization.CultureInfo.InvariantCulture);
+                double lng = double.Parse(coords[1], System.Globalization.CultureInfo.InvariantCulture);
+
+                var button = new Button
+                {
+                    Text = $"📍 {sender} a trimis o locație",
+                    BackgroundColor = Color.FromArgb("#E1F5FE"),
+                    TextColor = Colors.Black,
+                    Margin = new Thickness(5),
+                    CornerRadius = 10
+                };
+
+                button.Clicked += async (s, e) =>
+                {
+                    var url = $"https://www.google.com/maps/search/?api=1&query={lat.ToString(System.Globalization.CultureInfo.InvariantCulture)},{lng.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
+                    await Launcher.OpenAsync(url);
+                };
+
+                MessagesContainer.Children.Add(button);
+            }
+            catch { /* Tratare eroare format */ }
         }
 
         private async Task AddTextMessage(string sender, string text, Color color)
@@ -117,27 +142,6 @@ namespace Roomies
                 TextColor = color
             });
             await scrollView.ScrollToAsync(MessagesContainer, ScrollToPosition.End, true);
-        }
-
-        private void AddLocationMessage(string sender, string raw)
-        {
-            var coords = raw.Replace("LOCATION:", "").Split(',');
-            double lat = double.Parse(coords[0], System.Globalization.CultureInfo.InvariantCulture);
-            double lng = double.Parse(coords[1], System.Globalization.CultureInfo.InvariantCulture);
-
-            var button = new Button
-            {
-                Text = $"{sender} a trimis o locație",
-                BackgroundColor = Colors.LightGray
-            };
-
-            button.Clicked += (s, e) =>
-            {
-                var url = $"https://www.google.com/maps?q={lat},{lng}";
-                Launcher.OpenAsync(url);
-            };
-
-            MessagesContainer.Children.Add(button);
         }
     }
 }
