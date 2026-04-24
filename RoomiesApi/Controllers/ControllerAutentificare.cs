@@ -24,11 +24,11 @@ namespace RoomiesApi.Controllers
         {
             var user = await _db.GetMembruByEmailAsync(req.Email);
             if (user == null)
-                return Unauthorized("Email sau parolă greșită");
+                return Unauthorized("Email sau parolă gresita");
 
             var ok = PasswordHelper.VerifyPassword(req.Parola, user.ParolaHash, user.ParolaSalt);
             if (!ok)
-                return Unauthorized("Email sau parolă greșită");
+                return Unauthorized("Email sau parolă gresita");
 
             // dacă emailul nu e confirmat, blochează loginul
             if (user.EmailConfirmat == 0)
@@ -96,11 +96,46 @@ namespace RoomiesApi.Controllers
                         .Contains(alarma.Preferinte.ToLower()) ?? false))
                     compatibil = false;
                 if (compatibil)
-                    await _db.AddNotificationAsync(alarma.UserId,
-                        $"Un utilizator compatibil cu filtrele tale a apărut: {membru.Nume} {membru.Prenume}!");
+                {
+                    // Construiește mesajul cu filtrele alarmei
+                    var filtreAfisate = new StringBuilder();
+                    bool areFiltreCompletate = false;
+
+                    if (!string.IsNullOrWhiteSpace(alarma.Gen))
+                    {
+                        filtreAfisate.AppendLine($"Gen: {alarma.Gen}");
+                        areFiltreCompletate = true;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(alarma.Zona))
+                    {
+                        filtreAfisate.AppendLine($"Zona: {alarma.Zona}");
+                        areFiltreCompletate = true;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(alarma.StilViata))
+                    {
+                        filtreAfisate.AppendLine($"Stil de viata: {alarma.StilViata}");
+                        areFiltreCompletate = true;
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(alarma.Preferinte))
+                    {
+                        filtreAfisate.AppendLine($"Preferinte: {alarma.Preferinte}");
+                        areFiltreCompletate = true;
+                    }
+
+                    string mesajFiltreString = areFiltreCompletate
+                        ? filtreAfisate.ToString().TrimEnd()
+                        : "Nicio preferinta introdusa";
+
+                    var mesajNotificare = $"Un utilizator compatibil cu filtrele tale a aparut: {membru.Nume} {membru.Prenume}!\n\n{mesajFiltreString}";
+
+                    await _db.AddNotificationAsync(alarma.UserId, mesajNotificare);
+                }
             }
 
-            return Ok("Utilizator creat. Verifică emailul pentru confirmare.");
+            return Ok("Utilizator creat. Verifica emailul pentru confirmare.");
         }
 
         private string GenerateJwt(Membru user)

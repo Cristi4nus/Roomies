@@ -90,7 +90,7 @@ namespace Roomies
 
         private async void OnLogoutClicked(object sender, EventArgs e)
         {
-            bool confirm = await DisplayAlertAsync("Confirmare", "Sigur vrei să te deconectezi?", "Da", "Nu");
+            bool confirm = await DisplayAlertAsync("Confirmare", "Sigur vrei sa te deconectezi?", "Da", "Nu");
             if (!confirm)
                 return;
             App.JwtToken = null;

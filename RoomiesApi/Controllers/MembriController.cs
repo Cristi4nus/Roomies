@@ -44,7 +44,7 @@ namespace RoomiesApi.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             await _db.DeleteMembruAsync(id);
-            return Ok("Cont șters");
+            return Ok("Cont sters");
         }
     }
 }

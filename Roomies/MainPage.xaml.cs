@@ -179,13 +179,13 @@ namespace Roomies
 
                 if (await db.AreFriendsAsync(_user.Id, user.Id))
                 {
-                    await DisplayAlertAsync("Info", "Sunteti deja prieteni!", "OK");
+                    await DisplayAlertAsync("Info", "Sunteti deja prieteni", "OK");
                     return;
                 }
 
                 if (await db.HasReversePendingRequestAsync(_user.Id, user.Id))
                 {
-                    await DisplayAlertAsync("Atentie","Acest utilizator tia trimis deja o cerere de prietenie! Verifică notificările.","OK");
+                    await DisplayAlertAsync("Atentie","Acest utilizator tia trimis deja o cerere de prietenie! Verifică notificarile.","OK");
                     return;
                 }
 

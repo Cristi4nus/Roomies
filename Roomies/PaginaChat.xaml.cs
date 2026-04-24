@@ -108,30 +108,26 @@ namespace Roomies
 
         private void AddLocationMessage(string sender, string raw)
         {
-            try
+            var coords = raw.Replace("LOCATION:", "").Split(',');
+            double lat = double.Parse(coords[0], System.Globalization.CultureInfo.InvariantCulture);
+            double lng = double.Parse(coords[1], System.Globalization.CultureInfo.InvariantCulture);
+
+            var button = new Button
             {
-                var coords = raw.Replace("LOCATION:", "").Split(',');
-                double lat = double.Parse(coords[0], System.Globalization.CultureInfo.InvariantCulture);
-                double lng = double.Parse(coords[1], System.Globalization.CultureInfo.InvariantCulture);
+                Text = $"{sender} a trimis o locatie",
+                BackgroundColor = Color.FromArgb("#2B0B98"),
+                TextColor = Colors.Black,
+                Margin = new Thickness(5),
+                CornerRadius = 10
+            };
 
-                var button = new Button
-                {
-                    Text = $"📍 {sender} a trimis o locație",
-                    BackgroundColor = Color.FromArgb("#E1F5FE"),
-                    TextColor = Colors.Black,
-                    Margin = new Thickness(5),
-                    CornerRadius = 10
-                };
+            button.Clicked += async (s, e) =>
+            {
+                var url = $"https://www.google.com/maps/search/?api=1&query={lat.ToString(System.Globalization.CultureInfo.InvariantCulture)},{lng.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
+                await Launcher.OpenAsync(url);
+            };
 
-                button.Clicked += async (s, e) =>
-                {
-                    var url = $"https://www.google.com/maps/search/?api=1&query={lat.ToString(System.Globalization.CultureInfo.InvariantCulture)},{lng.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
-                    await Launcher.OpenAsync(url);
-                };
-
-                MessagesContainer.Children.Add(button);
-            }
-            catch { /* Tratare eroare format */ }
+            MessagesContainer.Children.Add(button);
         }
 
         private async Task AddTextMessage(string sender, string text, Color color)

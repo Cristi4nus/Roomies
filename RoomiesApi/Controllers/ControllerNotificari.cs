@@ -25,7 +25,7 @@ namespace RoomiesApi.Controllers
         public async Task<IActionResult> Add([FromBody] Notificare notif)
         {
             await _db.AddNotificationAsync(notif.UserId, notif.Text);
-            return Ok("Notificare adaugată");
+            return Ok("Notificare adaugata");
         }
     }
 }

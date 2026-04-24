@@ -68,7 +68,6 @@ namespace Roomies
             {
                 var sender = await db.GetMembruByIdAsync(req.SenderId);
 
-                // FIX 2: null check pentru sender
                 if (sender == null) continue;
 
                 var acceptButton = new Button

@@ -35,7 +35,7 @@ namespace RoomiesApi.Controllers
         public async Task<IActionResult> AddPrieten(int user1, int user2)
         {
             await _db.AddPrietenAsync(user1, user2);
-            return Ok("Prieten adăugat");
+            return Ok("Prieten adaugat");
         }
 
         [HttpDelete("remove")]

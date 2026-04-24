@@ -68,6 +68,7 @@ namespace Roomies
                 return await response.Content.ReadFromJsonAsync<Membru>();
         }
 
+        //adaug cereri de prietenie trimise care inca nu au fost adresate
         public async Task<List<CererePrietenie>> GetPendingRequestsForUserAsync(int userId)
         {
              var client = new HttpClient();
@@ -96,7 +97,7 @@ namespace Roomies
             var response = await client.DeleteAsync($"http://10.0.2.2:5137/api/membri/{userId}");
             return response.IsSuccessStatusCode;
         }
-
+        //verifica daca doi useri sunt prieteni 
         public async Task<bool> AreFriendsAsync(int user1Id, int user2Id)
         {
             var client = new HttpClient();

@@ -18,7 +18,7 @@ namespace RoomiesApi.Controllers
         public async Task<IActionResult> AddAlarma([FromBody] AlarmaFiltre alarma)
         {
             await _db.AddAlarmaAsync(alarma);
-            return Ok("Alarma salvată");
+            return Ok("Alarma salvata");
         }
     }
 }

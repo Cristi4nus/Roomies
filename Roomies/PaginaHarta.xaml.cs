@@ -40,7 +40,7 @@ namespace Roomies
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[HARTA] Eroare: {ex.Message}");
-                await DisplayAlertAsync("Eroare", $"Nu s-a putut încărca harta: {ex.Message}", "OK");
+                await DisplayAlertAsync("Eroare", $"Nu s-a putut incarca harta: {ex.Message}", "OK");
             }
         }
 
