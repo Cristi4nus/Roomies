@@ -26,7 +26,7 @@ namespace Roomies
             foreach (var friend in friends)
             {
                 var card = new UserCard();
-                card.LoadUser(friend, "Message");
+                card.LoadUser(friend, "Scrie mesaj");
 
                 card.CardTapped += async (s, e) =>
                 {

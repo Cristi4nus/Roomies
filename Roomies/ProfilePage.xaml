@@ -73,12 +73,12 @@
             <Editor x:Name="editorDescriere"
                     Placeholder="Descriere..."
                     AutoSize="TextChanges"
-                    HeightRequest="75" />
+                    HeightRequest="50" />
 
             <Entry x:Name="InputEmail" Placeholder="Adresa Email" />
 
             <Button x:Name="SaveButton"
-                    Text="Salvează Modificarile"
+                    Text="Salveaza Modificarile"
                     BackgroundColor="#2B0B98"
                     TextColor="White"
                     CornerRadius="10"
@@ -94,7 +94,7 @@
                     Clicked="OnLogoutClicked" />
 
             <Button x:Name="DeleteAccountButton"
-                    Text="Șterge Cont"
+                    Text="Sterge Cont"
                     BackgroundColor="#2B0B98"
                     TextColor="White"
                     CornerRadius="10"

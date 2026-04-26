@@ -252,8 +252,6 @@ public class DatabaseService
             @"INSERT INTO CereriPrietenie (SenderId, ReceiverId, Mesaj, Status, Data)
           VALUES (@SenderId, @ReceiverId, @Mesaj, @Status, @Data)",
             cerere);
-        await AddNotificationAsync(cerere.ReceiverId,
-            $"Ai primit o cerere de prietenie de la userul {cerere.SenderId}");
     }
 
     public async Task UpdateFriendRequestStatusAsync(int requestId, string status)

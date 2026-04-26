@@ -46,7 +46,8 @@
 
                 <Label x:Name="DetailsLabel"
                        FontSize="14"
-                       TextColor="Black"/>
+                       TextColor="Black"
+                       />
             </VerticalStackLayout>
 
         </Grid>

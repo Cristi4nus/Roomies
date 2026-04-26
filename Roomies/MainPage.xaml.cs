@@ -200,7 +200,7 @@ namespace Roomies
                     "Scrie un mesaj la cerere",
                     "Trimite",
                     "Anuleaza",
-                    "Atentie! Asta iti este singurul mesaj! Fa-l sa conteze!",
+                    "Atentie! Asta iti este singurul mesaj!",
                     maxLength: 200
                 );
 
@@ -209,7 +209,7 @@ namespace Roomies
 
                 await db.SendFriendRequestWithNotificationAsync(_user.Id, user.Id, mesaj);
 
-                await DisplayAlertAsync("Succes", "Cererea a fost trimisă!", "OK");
+                await DisplayAlertAsync("Succes", "Cererea a fost trimisa!", "OK");
             };
 
             return card;

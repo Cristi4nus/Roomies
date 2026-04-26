@@ -7,7 +7,7 @@
 
     <ScrollView>
         <VerticalStackLayout x:Name="FriendsContainer"
-                             Padding="15"
+                             Padding="30"
                              Spacing="15"/>
     </ScrollView>
 

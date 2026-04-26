@@ -116,7 +116,7 @@ namespace Roomies
             {
                 Text = $"{sender} a trimis o locatie",
                 BackgroundColor = Color.FromArgb("#2B0B98"),
-                TextColor = Colors.Black,
+                TextColor = Colors.White,
                 Margin = new Thickness(5),
                 CornerRadius = 10
             };

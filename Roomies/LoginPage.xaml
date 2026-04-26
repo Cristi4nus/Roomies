@@ -78,7 +78,7 @@
             <Editor x:Name="editorDescriere"
                     Placeholder="Descriere..."
                     AutoSize="TextChanges"
-                    HeightRequest="75" />
+                    HeightRequest="50" />
 
             <Entry x:Name="InputEmail" Placeholder="Adresa Email" />
 

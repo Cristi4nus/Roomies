@@ -6,25 +6,24 @@ namespace Roomies
     {
         public static List<string> ZonePreferate { get; } = new()
         {
-            "Marasti",
-            "Iris",
-            "Gheorgheni",
-            "Zorilor",
-            "Manastur",
-            "Centru",
             "Grigorescu",
-            "Someseni",
-            "Buna Ziua",
+            "Manastur",
             "Dambul Rotund",
-            "Floresti",
+            "Centru",
+            "Marasti",
             "Andrei Muresanu",
-            "Borhanci"
+            "Iris",
+            "Someseni",
+            "Gheorgheni",
+            "Borhanci",
+            "Zorilor",
+            "Buna Ziua",
+            "Floresti"
         };
         public static List<string> Genuri { get; } = new()
         {
             "Masculin",
             "Feminin",
-            "Non binar",
             "Altul"
         };
 
@@ -40,8 +39,7 @@ namespace Roomies
             "Fara animale",
             "Nefumator",
             "Fara petreceri",
-            "Fara galagie seara",
-            "Fara oaspeti peste noapte"
+            "Fara galagie seara"
         };
 
     }
