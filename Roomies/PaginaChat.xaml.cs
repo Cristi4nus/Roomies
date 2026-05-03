@@ -39,18 +39,31 @@ namespace Roomies
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            _chat.Connection.Remove("PrimesteMesaj");
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
 
+            _chat.Connection.Remove("PrimesteMesaj");
+            _chat.Connection.On<string, string>("PrimesteMesaj", async (fromId, message) =>
+            {
+                if (fromId == prieten.Id.ToString())
+                {
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        if (message.StartsWith("LOCATION:"))
+                            AddLocationMessage($"{prieten.Nume} {prieten.Prenume}", message);
+                        else
+                            await AddTextMessage($"{prieten.Nume} {prieten.Prenume}", message, Colors.Black);
+                    });
+                }
+            });
+
             try
             {
-                if (_chat.Connection.State == HubConnectionState.Connected)
-                    await _chat.Connection.StopAsync();
-                await _chat.StartAsync();
+                if (_chat.Connection.State == HubConnectionState.Disconnected)
+                    await _chat.StartAsync();
             }
             catch (Exception ex)
             {
